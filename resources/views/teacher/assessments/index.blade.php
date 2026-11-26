@@ -4,31 +4,32 @@
 
 @section('content')
 <div x-data="{ dirty: false }" class="flex flex-col gap-gutter-lg">
-<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md"><div class="flex flex-col gap-gutter-xs"><h1 class="font-headline text-headline-lg text-on-surface">Input Nilai</h1></div></section>
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md"><div class="flex flex-col gap-gutter-xs"><h1 class="font-headline text-headline-lg text-on-surface">Input Nilai</h1><div class="h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"></div></div></section>
 
 @if(session('success'))
-<div class="bg-success-container border border-success/30 text-on-success-container px-4 py-2 rounded mb-4 font-body text-body-md">{{ session('success') }}</div>
+<div class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-md px-4 py-3 flex items-center gap-2 font-body text-body-md"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span><span>{{ session('success') }}</span></div>
 @endif
 @if($errors->any())
-<div class="bg-error-container border border-error/30 text-on-error-container px-4 py-2 rounded mb-4 font-body text-body-md">
+<div class="bg-rose-50 border border-rose-200 text-rose-800 rounded-md px-4 py-3 flex items-center gap-2 font-body text-body-md">
+<span class="material-symbols-outlined" aria-hidden="true">error</span>
 <ul class="list-disc pl-5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
 </div>
 @endif
 
 <form method="GET" action="/guru/assessments" class="flex flex-wrap gap-2 mb-6">
-<select name="class_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+<select name="class_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
 <option value="">Pilih Kelas</option>
 @foreach($classes as $c)<option value="{{ $c->id }}" @selected(($filters['class_id'] ?? null) == $c->id)>{{ $c->name }}</option>@endforeach
 </select>
-<select name="subject_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+<select name="subject_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
 <option value="">Pilih Mapel</option>
 @foreach($subjects as $s)<option value="{{ $s->id }}" @selected(($filters['subject_id'] ?? null) == $s->id)>{{ $s->name }} ({{ $s->code }})</option>@endforeach
 </select>
-<select name="academic_year_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+<select name="academic_year_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
 <option value="">Tahun Ajaran</option>
 @foreach($academicYears as $y)<option value="{{ $y->id }}" @selected(($filters['academic_year_id'] ?? null) == $y->id)>{{ $y->name }}</option>@endforeach
 </select>
-<select name="semester_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+<select name="semester_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
 <option value="">Semester</option>
 @foreach($semesters as $s)<option value="{{ $s->id }}" @selected(($filters['semester_id'] ?? null) == $s->id)>{{ $s->name }}</option>@endforeach
 </select>
@@ -49,20 +50,20 @@
 <input type="hidden" name="loaded_at" value="{{ $loadedAt }}">
 
 <div class="bg-surface border border-outline-variant rounded-md overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left border-collapse">
-<thead class="bg-surface-dim border-b border-outline-variant">
+<thead class="bg-sidebar">
 <tr>
-<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">NIS</span></th>
-<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Nama Siswa</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">NIS</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Nama Siswa</span></th>
 @foreach($components as $comp)
-<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">{{ $comp->name }}</span><br><span class="font-body text-body-sm text-on-surface-muted">{{ $comp->type }} &middot; {{ rtrim(rtrim(number_format($comp->weight, 2), '0'), '.') }}%</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">{{ $comp->name }}</span><br><span class="font-body text-body-sm text-white/80">{{ $comp->type }} &middot; {{ rtrim(rtrim(number_format($comp->weight, 2), '0'), '.') }}%</span></th>
 @endforeach
-<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Status</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Status</span></th>
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant">
 @php $i = 0; @endphp
 @foreach($students as $student)
-<tr class="hover:bg-surface-dim transition-colors duration-state-change">
+<tr class="hover:bg-surface-dim even:bg-blue-50/50 transition-colors duration-state-change">
 <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $student->nis }}</td>
 <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $student->name }}</td>
 @foreach($components as $comp)
@@ -74,14 +75,20 @@
 value="{{ $existing?->score !== null ? $existing->score : '' }}"
 @change="dirty = true"
 {{ $existing && $existing->isLocked() ? 'disabled' : '' }}
-class="w-20 border border-outline-variant rounded px-2 py-1 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary {{ $existing && $existing->isLocked() ? 'bg-surface-dim' : '' }}"
+class="w-20 border border-outline-variant rounded px-2 py-1 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30 {{ $existing && $existing->isLocked() ? 'bg-surface-dim' : '' }}"
 placeholder="-">
 </td>
 @php $i++; @endphp
 @endforeach
 <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">
 @php $any = $scores->filter(fn($s) => $s->student_id === $student->id)->first(); @endphp
-{{ $any ? $any->status : 'belum ada' }}
+@if(!$any)<span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-amber-100 text-amber-800">belum ada</span>
+@elseif($any->status === 'draft')<span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-slate-100 text-slate-700">draft</span>
+@elseif($any->status === 'terkirim')<span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-amber-100 text-amber-800">terkirim</span>
+@elseif($any->status === 'dikunci')<span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-violet-100 text-violet-800">dikunci</span>
+@elseif($any->status === 'perlu_revisi')<span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-rose-100 text-rose-800">perlu_revisi</span>
+@else<span class="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-slate-100 text-slate-700">{{ $any->status }}</span>
+@endif
 </td>
 </tr>
 @endforeach
@@ -116,11 +123,11 @@ placeholder="-">
 @endif
 
 <div class="mt-6 font-body text-body-md">
-<a href="/guru/assessments/recap" class="text-primary hover:underline">Rekap Nilai</a> &middot;
-<a href="/guru/assessments/calculate" class="text-primary hover:underline">Hitung Nilai Akhir</a> &middot;
-<a href="/guru/assessments/history" class="text-primary hover:underline">Riwayat Perubahan</a> &middot;
-<a href="/guru/components" class="text-primary hover:underline">Komponen &amp; Bobot</a> &middot;
-<a href="/guru/descriptions" class="text-primary hover:underline">Deskripsi Capaian</a>
+<a href="/guru/assessments/recap" class="inline-flex items-center px-2.5 py-1 rounded bg-sky-100 text-sky-800 font-body text-body-md hover:bg-sky-200">Rekap Nilai</a> &middot;
+<a href="/guru/assessments/calculate" class="inline-flex items-center px-2.5 py-1 rounded bg-sky-100 text-sky-800 font-body text-body-md hover:bg-sky-200">Hitung Nilai Akhir</a> &middot;
+<a href="/guru/assessments/history" class="inline-flex items-center px-2.5 py-1 rounded bg-sky-100 text-sky-800 font-body text-body-md hover:bg-sky-200">Riwayat Perubahan</a> &middot;
+<a href="/guru/components" class="inline-flex items-center px-2.5 py-1 rounded bg-sky-100 text-sky-800 font-body text-body-md hover:bg-sky-200">Komponen &amp; Bobot</a> &middot;
+<a href="/guru/descriptions" class="inline-flex items-center px-2.5 py-1 rounded bg-sky-100 text-sky-800 font-body text-body-md hover:bg-sky-200">Deskripsi Capaian</a>
 </div>
 </div>
 @endsection

@@ -6,6 +6,7 @@
 <section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
     <div class="flex flex-col gap-gutter-xs">
         <h1 class="font-headline text-headline-lg text-on-surface">Tambah Pengguna</h1>
+        <div class="h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"></div>
     </div>
 </section>
 
@@ -14,27 +15,27 @@
         @csrf
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Nama</label>
-            <input name="name" placeholder="Nama" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="name" placeholder="Nama" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Email</label>
-            <input name="email" type="email" placeholder="Email" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="email" type="email" placeholder="Email" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Password</label>
-            <input name="password" type="password" placeholder="Password (min 8 karakter)" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="password" type="password" placeholder="Password (min 8 karakter)" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Ulangi password</label>
-            <input name="password_confirmation" type="password" placeholder="Ulangi password" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="password_confirmation" type="password" placeholder="Ulangi password" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Role</label>
-            <select name="role_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary"><option value="">Pilih Role</option>@foreach($roles as $r)<option value="{{ $r->id }}">{{ $r->name }}</option>@endforeach</select>
+            <select name="role_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30"><option value="">Pilih Role</option>@foreach($roles as $r)<option value="{{ $r->id }}">{{ $r->name }}</option>@endforeach</select>
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Guru</label>
-            <select name="teacher_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary"><option value="">Bukan Guru (tanpa data guru)</option>@foreach($teachers as $t)<option value="{{ $t->id }}">{{ $t->name }}</option>@endforeach</select>
+            <select name="teacher_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30"><option value="">Bukan Guru (tanpa data guru)</option>@foreach($teachers as $t)<option value="{{ $t->id }}">{{ $t->name }}</option>@endforeach</select>
         </div>
         <label class="font-body text-body-md text-on-surface"><input type="checkbox" name="is_active" value="1" checked> Aktif</label>
         <div>

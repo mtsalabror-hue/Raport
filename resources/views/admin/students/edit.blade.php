@@ -6,6 +6,7 @@
 <section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
     <div class="flex flex-col gap-gutter-xs">
         <h1 class="font-headline text-headline-lg text-on-surface">Edit Siswa</h1>
+        <div class="h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"></div>
     </div>
 </section>
 
@@ -14,19 +15,19 @@
         @csrf @method('PUT')
         <div class="flex flex-col gap-gutter-xs">
             <label for="nis" class="font-label text-label-md text-on-surface">NIS</label>
-            <input id="nis" name="nis" value="{{ $student->nis }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input id="nis" name="nis" value="{{ $student->nis }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label for="nisn" class="font-label text-label-md text-on-surface">NISN</label>
-            <input id="nisn" name="nisn" value="{{ $student->nisn }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input id="nisn" name="nisn" value="{{ $student->nisn }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label for="name" class="font-label text-label-md text-on-surface">Nama</label>
-            <input id="name" name="name" value="{{ $student->name }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input id="name" name="name" value="{{ $student->name }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label for="gender" class="font-label text-label-md text-on-surface">Jenis Kelamin</label>
-            <select id="gender" name="gender" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary"><option value="L" {{ $student->gender=='L'?'selected':'' }}>L</option><option value="P" {{ $student->gender=='P'?'selected':'' }}>P</option></select>
+            <select id="gender" name="gender" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30"><option value="L" {{ $student->gender=='L'?'selected':'' }}>L</option><option value="P" {{ $student->gender=='P'?'selected':'' }}>P</option></select>
         </div>
         <div>
             <button type="submit" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Simpan</button>

@@ -6,6 +6,7 @@
 <section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
     <div class="flex flex-col gap-gutter-xs">
         <h1 class="font-headline text-headline-lg text-on-surface">Edit Pengguna</h1>
+        <div class="h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"></div>
     </div>
 </section>
 
@@ -14,27 +15,27 @@
         @csrf @method('PUT')
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Nama</label>
-            <input name="name" value="{{ $user->name }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="name" value="{{ $user->name }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Email</label>
-            <input name="email" type="email" value="{{ $user->email }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="email" type="email" value="{{ $user->email }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Password baru</label>
-            <input name="password" type="password" placeholder="Password baru (kosongkan bila tidak diubah)" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="password" type="password" placeholder="Password baru (kosongkan bila tidak diubah)" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Ulangi password baru</label>
-            <input name="password_confirmation" type="password" placeholder="Ulangi password baru" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input name="password_confirmation" type="password" placeholder="Ulangi password baru" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Role</label>
-            <select name="role_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">@foreach($roles as $r)<option value="{{ $r->id }}" {{ $user->role_id==$r->id?'selected':'' }}>{{ $r->name }}</option>@endforeach</select>
+            <select name="role_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">@foreach($roles as $r)<option value="{{ $r->id }}" {{ $user->role_id==$r->id?'selected':'' }}>{{ $r->name }}</option>@endforeach</select>
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label class="font-label text-label-md text-on-surface">Guru</label>
-            <select name="teacher_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary"><option value="">Bukan Guru (tanpa data guru)</option>@foreach($teachers as $t)<option value="{{ $t->id }}" {{ $user->teacher_id==$t->id?'selected':'' }}>{{ $t->name }}</option>@endforeach</select>
+            <select name="teacher_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30"><option value="">Bukan Guru (tanpa data guru)</option>@foreach($teachers as $t)<option value="{{ $t->id }}" {{ $user->teacher_id==$t->id?'selected':'' }}>{{ $t->name }}</option>@endforeach</select>
         </div>
         <label class="font-body text-body-md text-on-surface"><input type="checkbox" name="is_active" value="1" {{ $user->is_active?'checked':'' }}> Aktif</label>
         <div>

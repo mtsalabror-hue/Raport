@@ -6,6 +6,7 @@
 <section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
     <div class="flex flex-col gap-gutter-xs">
         <h1 class="font-headline text-headline-lg text-on-surface">Edit Semester</h1>
+        <div class="h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"></div>
     </div>
 </section>
 
@@ -14,7 +15,7 @@
         @csrf @method('PUT')
         <div class="flex flex-col gap-gutter-xs">
             <label for="academic_year_id" class="font-label text-label-md text-on-surface">Tahun Ajaran</label>
-            <select id="academic_year_id" name="academic_year_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <select id="academic_year_id" name="academic_year_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
                 @foreach($years as $y)
                 <option value="{{ $y->id }}" {{ $semester->academic_year_id==$y->id?'selected':'' }}>{{ $y->name }}</option>
                 @endforeach
@@ -22,7 +23,7 @@
         </div>
         <div class="flex flex-col gap-gutter-xs">
             <label for="name" class="font-label text-label-md text-on-surface">Nama</label>
-            <input id="name" name="name" value="{{ $semester->name }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+            <input id="name" name="name" value="{{ $semester->name }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
         </div>
         <div>
             <button type="submit" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Simpan</button>
