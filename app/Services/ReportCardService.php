@@ -8,6 +8,7 @@ use App\Models\ReportCard;
 use App\Models\ReportCardApproval;
 use App\Models\ReportCardSubject;
 use App\Models\StudentAchievement;
+use App\Models\StudentAttitude;
 use App\Models\StudentExtracurricular;
 use App\Models\SystemSetting;
 use App\Models\TeacherDescription;use App\Models\User;
@@ -133,6 +134,16 @@ class ReportCardService
             ->where('semester_id', $sem)
             ->get();
 
+        // Fase B: sikap sosial & spiritual, dibaca live per periode
+        // rapor (seperti presensi/prestasi/ekskul — bukan snapshot).
+        // Bukan komponen kelengkapan: kosong berarti '-' di PDF.
+        $attitudes = StudentAttitude::query()
+            ->where('student_id', $student->id)
+            ->where('academic_year_id', $ay)
+            ->where('semester_id', $sem)
+            ->get()
+            ->keyBy('jenis');
+
         $homeroomNote = $card->notes()->where('note_type', 'wali_kelas')->latest()->first();
         $principalNote = $card->notes()->where('note_type', 'kepala_sekolah')->latest()->first();
 
@@ -161,6 +172,7 @@ class ReportCardService
             'attendance' => $attendance,
             'achievements' => $achievements,
             'extracurriculars' => $extracurriculars,
+            'attitudes' => $attitudes,
             'homeroom_note' => $homeroomNote,
             'principal_note' => $principalNote,
             'snapshot' => $snapshot,

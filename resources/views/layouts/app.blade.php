@@ -229,6 +229,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">description</span>
             <span class="font-body text-body-md">Rapor</span>
           </a>
+          <a href="{{ route('admin.attitudes.recap') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.attitudes.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">self_improvement</span>
+            <span class="font-body text-body-md">Rekap Sikap</span>
+          </a>
           <a href="{{ route('admin.internships.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.internships.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">work</span>
             <span class="font-body text-body-md">PKL</span>
@@ -311,6 +315,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
           <a href="{{ route('wali.notes') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.notes.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">edit_note</span>
             <span class="font-body text-body-md">Catatan</span>
+          </a>
+          <a href="{{ route('wali.attitudes') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.attitudes.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">self_improvement</span>
+            <span class="font-body text-body-md">Sikap</span>
           </a>
           <a href="{{ route('wali.internships.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.internships.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">work</span>

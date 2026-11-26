@@ -92,6 +92,15 @@
 </table>
 <p class="small">Hadir: {{ $attendance['hadir'] }} hari.</p>
 
+<h2>Sikap</h2>
+<table class="bordered">
+  <thead><tr><th style="width: 25%; text-align: left;">Sikap</th><th style="width: 20%;">Predikat</th><th style="text-align: left;">Deskripsi</th></tr></thead>
+  <tbody>
+    <tr><td>Sikap Sosial</td><td class="center">{{ $attitudes['sosial']->predikat ?? '-' }}</td><td>{{ $attitudes['sosial']->deskripsi ?? '-' }}</td></tr>
+    <tr><td>Sikap Spiritual</td><td class="center">{{ $attitudes['spiritual']->predikat ?? '-' }}</td><td>{{ $attitudes['spiritual']->deskripsi ?? '-' }}</td></tr>
+  </tbody>
+</table>
+
 <h2>Catatan Wali Kelas</h2>
 <p>{{ $homeroom_note->content ?? 'Tidak ada catatan wali kelas.' }}</p>
 

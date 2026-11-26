@@ -92,6 +92,29 @@ Preview Rapor - {{ $student->name }}
 <p class="font-body text-body-md text-on-surface-muted mb-6">Belum ada ekstrakurikuler pada periode ini.</p>
 @endif
 
+<h2 class="font-headline text-headline-md text-on-surface border-l-4 border-primary pl-3 mb-2">Sikap</h2>
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden mb-6"><div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+<thead class="bg-sidebar">
+<tr>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Sikap</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Predikat</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Deskripsi</span></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-dim even:bg-blue-50/50 transition-colors duration-state-change">
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">Sikap Sosial</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $attitudes['sosial']->predikat ?? '-' }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $attitudes['sosial']->deskripsi ?? '-' }}</td>
+</tr>
+<tr class="hover:bg-surface-dim even:bg-blue-50/50 transition-colors duration-state-change">
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">Sikap Spiritual</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $attitudes['spiritual']->predikat ?? '-' }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $attitudes['spiritual']->deskripsi ?? '-' }}</td>
+</tr>
+</tbody>
+</table></div></div>
+
 <h2 class="font-headline text-headline-md text-on-surface border-l-4 border-primary pl-3 mb-2">Catatan Wali Kelas</h2>
 <p class="font-body text-body-md text-on-surface mb-6">{{ $homeroomNote->content ?? 'Belum ada catatan wali kelas.' }}</p>
 

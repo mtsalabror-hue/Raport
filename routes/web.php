@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\AttitudeController as AdminAttitudeController;
 use App\Http\Controllers\Admin\CompetencyExamController as AdminCompetencyExamController;
 use App\Http\Controllers\Admin\CurriculumController;
 use App\Http\Controllers\Admin\HomeroomAssignmentController;
@@ -56,6 +57,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/report-cards/{reportCard}/publish', [AdminReportCardController::class, 'publish'])->name('admin.report-cards.publish');
         Route::post('/report-cards/{reportCard}/lock', [AdminReportCardController::class, 'lock'])->name('admin.report-cards.lock');
         Route::get('/report-cards/{reportCard}/pdf', [AdminReportCardController::class, 'pdf'])->name('admin.report-cards.pdf');
+        // Fase B: rekap sikap sosial & spiritual (hanya-baca).
+        Route::get('/attitudes/recap', [AdminAttitudeController::class, 'recap'])->name('admin.attitudes.recap');
         Route::get('/school-profile', [SchoolProfileController::class, 'edit'])->name('admin.school-profile.edit');
         Route::put('/school-profile', [SchoolProfileController::class, 'update'])->name('admin.school-profile.update');
         Route::get('/print-settings', [SchoolProfileController::class, 'editPrint'])->name('admin.print-settings.edit');
@@ -120,6 +123,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/notes', [HomeroomController::class, 'storeNote'])->name('wali.notes.store');
         Route::put('/notes/{note}', [HomeroomController::class, 'updateNote'])->name('wali.notes.update');
         Route::delete('/notes/{note}', [HomeroomController::class, 'destroyNote'])->name('wali.notes.destroy');
+        // Fase B: sikap sosial & spiritual (isi massal per kelas).
+        Route::get('/attitudes', [HomeroomController::class, 'attitudes'])->name('wali.attitudes');
+        Route::post('/attitudes', [HomeroomController::class, 'storeAttitudes'])->name('wali.attitudes.store');
         Route::get('/achievements', [HomeroomController::class, 'achievements'])->name('wali.achievements');
         Route::post('/achievements', [HomeroomController::class, 'storeAchievement'])->name('wali.achievements.store');
         Route::put('/achievements/{achievement}', [HomeroomController::class, 'updateAchievement'])->name('wali.achievements.update');

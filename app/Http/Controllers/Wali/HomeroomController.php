@@ -14,6 +14,7 @@ use App\Models\SchoolClass;
 use App\Models\Semester;
 use App\Models\Student;
 use App\Models\StudentAchievement;
+use App\Models\StudentAttitude;
 use App\Models\StudentExtracurricular;
 use App\Models\Teacher;
 use App\Models\TeacherDescription;
@@ -764,6 +765,148 @@ class HomeroomController extends Controller
     }
 
     // -----------------------------------------------------------------
+    // Sikap sosial & spiritual (Fase B / RDM)
+    // -----------------------------------------------------------------
+
+    /**
+     * Form isi sikap massal: satu halaman, semua siswa kelas wali,
+     * pilih predikat + tulis deskripsi per siswa untuk sikap sosial
+     * dan spiritual (pola input presensi massal).
+     */
+    public function attitudes(Request $request)
+    {
+        $filters = $request->validate([
+            'class_id' => 'nullable|integer',
+            'academic_year_id' => 'nullable|integer',
+            'semester_id' => 'nullable|integer',
+        ]);
+
+        $teacher = $this->resolveTeacher($request);
+        $classes = $this->myClasses($teacher->id);
+
+        [$defaultAy, $defaultSem] = $this->defaultPeriod($request, $teacher->id);
+        $filters['academic_year_id'] ??= $defaultAy;
+        $filters['semester_id'] ??= $defaultSem;
+
+        $students = collect();
+        $existing = collect();
+
+        if (! empty($filters['class_id']) && ! empty($filters['academic_year_id']) && ! empty($filters['semester_id'])) {
+            $this->assertHomeroom($teacher->id, $filters['class_id'], $filters['academic_year_id'], $filters['semester_id']);
+
+            $students = Student::query()
+                ->where('class_id', $filters['class_id'])
+                ->orderBy('name')
+                ->get();
+
+            $existing = StudentAttitude::query()
+                ->whereIn('student_id', $students->pluck('id'))
+                ->where('academic_year_id', $filters['academic_year_id'])
+                ->where('semester_id', $filters['semester_id'])
+                ->get()
+                ->groupBy('student_id')
+                ->map(fn ($rows) => $rows->keyBy('jenis'));
+        }
+
+        return view('wali.attitudes', array_merge($this->filterLists(), [
+            'filters' => $filters,
+            'classes' => $classes,
+            'students' => $students,
+            'existing' => $existing,
+            'predikatOptions' => StudentAttitude::PREDIKAT,
+            'jenisLabels' => StudentAttitude::JENIS_LABELS,
+        ]));
+    }
+
+    /**
+     * Simpan sikap massal untuk satu kelas + periode dalam satu
+     * transaksi. Upsert per (siswa, jenis): baris yang predikatnya
+     * kosong dan deskripsinya kosong dilewati (tidak dibuat, tidak
+     * dihapus). Rapor yang sudah diterbitkan/dikunci tidak boleh
+     * dikoreksi lewat jalur ini (pola assertEditable Stage 10).
+     */
+    public function storeAttitudes(Request $request)
+    {
+        $d = $request->validate([
+            'class_id' => 'required|integer|exists:classes,id',
+            'academic_year_id' => 'required|integer|exists:academic_years,id',
+            'semester_id' => 'required|integer|exists:semesters,id',
+            'records' => 'required|array|min:1',
+            'records.*.student_id' => 'required|integer|exists:students,id|distinct',
+            'records.*.sosial.predikat' => 'nullable|in:Sangat Baik,Baik,Cukup,Kurang|required_with:records.*.sosial.deskripsi',
+            'records.*.sosial.deskripsi' => 'nullable|string|max:2000',
+            'records.*.spiritual.predikat' => 'nullable|in:Sangat Baik,Baik,Cukup,Kurang|required_with:records.*.spiritual.deskripsi',
+            'records.*.spiritual.deskripsi' => 'nullable|string|max:2000',
+        ]);
+
+        $teacher = $this->resolveTeacher($request);
+        $this->assertHomeroom($teacher->id, $d['class_id'], $d['academic_year_id'], $d['semester_id']);
+
+        // Semua siswa pada payload harus anggota kelas yang dipilih.
+        $studentIds = collect($d['records'])->pluck('student_id')->unique()->values();
+        $inClass = Student::query()
+            ->whereIn('id', $studentIds)
+            ->where('class_id', $d['class_id'])
+            ->count();
+
+        if ($inClass !== $studentIds->count()) {
+            return back()->withErrors(['records' => 'Ada siswa yang bukan anggota kelas yang dipilih.']);
+        }
+
+        // Sikap bukan komponen kelengkapan rapor, tetapi rapor yang
+        // sudah diterbitkan/dikunci tetap tidak boleh dikoreksi.
+        $published = ReportCard::query()
+            ->whereIn('student_id', $studentIds)
+            ->where('academic_year_id', $d['academic_year_id'])
+            ->where('semester_id', $d['semester_id'])
+            ->whereIn('status', ReportCardService::PUBLISHED_STATUSES)
+            ->first();
+
+        if ($published) {
+            $this->reportCards->assertEditable($published, $request->user(), 'sikap sosial & spiritual');
+        }
+
+        $saved = 0;
+
+        DB::transaction(function () use ($d, $request, &$saved) {
+            foreach ($d['records'] as $row) {
+                foreach (StudentAttitude::JENIS as $jenis) {
+                    $entry = $row[$jenis] ?? [];
+                    $predikat = $entry['predikat'] ?? null;
+                    $deskripsi = $entry['deskripsi'] ?? null;
+
+                    if (empty($predikat) && empty($deskripsi)) {
+                        continue;
+                    }
+
+                    $attitude = StudentAttitude::updateOrCreate(
+                        [
+                            'student_id' => $row['student_id'],
+                            'academic_year_id' => $d['academic_year_id'],
+                            'semester_id' => $d['semester_id'],
+                            'jenis' => $jenis,
+                        ],
+                        [
+                            'predikat' => $predikat,
+                            'deskripsi' => $deskripsi,
+                        ]
+                    );
+
+                    $this->logActivity($request, 'student_attitude.saved', StudentAttitude::class, $attitude->id, [
+                        'student_id' => $row['student_id'],
+                        'jenis' => $jenis,
+                        'predikat' => $predikat,
+                    ]);
+
+                    $saved++;
+                }
+            }
+        });
+
+        return back()->with('success', "{$saved} catatan sikap disimpan.");
+    }
+
+    // -----------------------------------------------------------------
     // Monitoring kelengkapan rapor
     // -----------------------------------------------------------------
 
@@ -895,6 +1038,15 @@ class HomeroomController extends Controller
             ->where('semester_id', $sem)
             ->get();
 
+        // Fase B: sikap sosial & spiritual (bukan komponen kelengkapan;
+        // tampil bila sudah diisi, '-' bila kosong).
+        $attitudes = StudentAttitude::query()
+            ->where('student_id', $student->id)
+            ->where('academic_year_id', $ay)
+            ->where('semester_id', $sem)
+            ->get()
+            ->keyBy('jenis');
+
         $reportCard = $check['report_card'];
         $homeroomNote = $reportCard?->notes()->where('note_type', 'wali_kelas')->latest()->first();
 
@@ -906,6 +1058,7 @@ class HomeroomController extends Controller
             'attendance' => $attendance,
             'achievements' => $achievements,
             'extracurriculars' => $extracurriculars,
+            'attitudes' => $attitudes,
             'homeroomNote' => $homeroomNote,
             'reportCard' => $reportCard,
         ]));
