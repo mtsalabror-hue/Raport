@@ -1,4 +1,18 @@
 <?php
+
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
-class Semester extends Model { protected $table='semesters'; protected $fillable=['academic_year_id','name','is_active']; }
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Semester extends Model
+{
+    protected $table = 'semesters';
+
+    protected $fillable = ['academic_year_id', 'name', 'is_active'];
+
+    public function academicYear(): BelongsTo
+    {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
+    }
+}
