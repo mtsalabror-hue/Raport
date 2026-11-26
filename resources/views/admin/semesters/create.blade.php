@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Tambah Semester</h1><form method=POST action=/admin/semesters>@csrf<select name=academic_year_id>@foreach($years as $y)<option value=></option>@endforeach</select><input name=name><button>Simpan</button></form></body></html>

@@ -1,0 +1,1 @@
+<h1>Komponen</h1><form method=POST action=/guru/components>@csrf<input name=name><input name=type><input name=weight><button>Simpan</button></form>

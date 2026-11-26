@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Tambah Mapel</h1><form method=POST action=/admin/subjects>@csrf<input name=code><input name=name><button>Simpan</button></form></body></html>

@@ -1,0 +1,1 @@
+<h1>Deskripsi Capaian</h1><form method=POST action=/guru/descriptions>@csrf<input name=student_id><input name=subject_id><input name=academic_year_id><input name=semester_id><textarea name=description></textarea><button>Simpan</button></form>

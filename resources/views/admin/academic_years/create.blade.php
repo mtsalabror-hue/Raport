@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Tambah TA</h1><form method=POST action=/admin/academic_years>@csrf<input name=name><input name=start_date type=date><input name=end_date type=date><button>Simpan</button></form></body></html>

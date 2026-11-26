@@ -1,0 +1,1 @@
+<h1>Hasil Perhitungan</h1><ul>@foreach($results as $k=>$v)<li>{{ $k }}: {{ $v }}</li>@endforeach</ul>

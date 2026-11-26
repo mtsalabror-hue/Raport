@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Tambah Kurikulum</h1><form method=POST action=/admin/curricula>@csrf<input name=name><button>Simpan</button></form></body></html>

@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Kurikulum</h1><a href=/admin/curricula/create>Tambah</a><ul>@foreach($items as $c)<li>{{ $c->name }}</li>@endforeach</ul>{{ $items->links() }}</body></html>

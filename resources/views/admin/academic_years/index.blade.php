@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><title>TA</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="p-6">
+<h1 class="text-xl font-bold mb-4">Data Tahun Ajaran</h1>
+<a href="{{ route('admin.academic_years.create') }}" class="bg-green-600 text-white px-3 py-2 rounded">Tambah</a>
+<table class="w-full mt-4 border"><thead><tr><th>Nama</th><th>Aksi</th></tr></thead><tbody>
+@foreach($items as $a)
+<tr><td>{{ $a->name }}</td><td>
+<a href="{{ route('admin.academic_years.edit',$a) }}">Edit</a>
+<form method="POST" action="{{ route('admin.academic_years.destroy',$a) }}" style="display:inline">@csrf @method('DELETE')<button>Hapus</button></form>
+</td></tr>
+@endforeach
+</tbody></table>
+{{ $items->links() }}
+</body></html>

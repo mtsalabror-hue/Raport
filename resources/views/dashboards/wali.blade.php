@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Dashboard Wali Kelas</h1><form method=POST action=/logout>@csrf<button>Logout</button></form></body></html>

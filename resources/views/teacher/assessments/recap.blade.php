@@ -1,0 +1,1 @@
+<h1>Rekap Nilai</h1><ul>@foreach($scores as $s)<li>{{ $s->student?->name }} - {{ $s->component?->name }}: {{ $s->score }}</li>@endforeach</ul>

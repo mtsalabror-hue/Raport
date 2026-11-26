@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Tambah Guru</h1><form method=POST action=/admin/teachers>@csrf<input name=nip placeholder=NIP><input name=name placeholder=Nama><select name=gender><option value=L>L</option><option value=P>P</option></select><button>Simpan</button></form></body></html>

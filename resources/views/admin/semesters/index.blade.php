@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Semester</h1><a href=/admin/semesters/create>Tambah</a><ul>@foreach($items as $s)<li>{{ $s->name }} ({{ $s->academicYear?->name }})</li>@endforeach</ul>{{ $items->links() }}</body></html>

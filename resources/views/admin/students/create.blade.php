@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Tambah Siswa</h1><form method=POST action=/admin/students>@csrf<input name=nis placeholder=NIS><input name=nisn placeholder=NISN><input name=name placeholder=Nama><select name=gender><option value=L>L</option><option value=P>P</option></select><button>Simpan</button></form></body></html>

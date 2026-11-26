@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h1>Tambah Jurusan</h1><form method=POST action="/admin/departments">@csrf<input name=code placeholder=Kode><input name=name placeholder=Nama><textarea name=description></textarea><button>Simpan</button></form></body></html>
