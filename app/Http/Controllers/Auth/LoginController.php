@@ -28,6 +28,8 @@ class LoginController extends Controller
                 'admin' => '/admin/dashboard',
                 'guru' => '/guru/dashboard',
                 'wali_kelas' => '/wali/dashboard',
+                'kepala_sekolah' => '/kepala_sekolah/dashboard',
+                'waka_kurikulum' => '/waka_kurikulum/dashboard',
                 default => '/',
             });
         }

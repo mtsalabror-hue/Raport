@@ -74,7 +74,7 @@ system_settings (key/value JSONB)
 
 | Tabel | Kolom kunci | Keterangan |
 |---|---|---|
-| roles | id, name, slug (admin/guru/wali_kelas), description | Role pengguna |
+| roles | id, name, slug (admin/guru/wali_kelas/kepala_sekolah/waka_kurikulum), description | Role pengguna |
 | users | id, name, email unique, password (hash), role_id, teacher_id nullable, is_active | Akun login; teacher_id menghubungkan guru/wali ke data guru |
 | departments | id, code unique, name, description | Jurusan / kompetensi keahlian |
 | academic_years | id, name, start_date, end_date, is_active | Tahun ajaran |
@@ -105,6 +105,7 @@ system_settings (key/value JSONB)
 | competency_exams | id, student_id, subject_id, score, note, exam_date | Hasil UKK (kolom note diawali "Penguji: ..." bila ada penguji) |
 | activity_logs | id, user_id nullable, action, model_type, model_id, ip_address, user_agent, metadata JSONB | Audit log (tanpa password/token) |
 | system_settings | id, key unique, value JSONB, description | Pengaturan sistem (mis. nama sekolah, KKTP default) |
+| Profil sekolah + cetak (Fase A, tanpa tabel baru) | system_settings | Kunci: school_name, school_npsn, school_address, school_city, school_phone, school_logo (path relatif di disk public), principal_name, principal_nip, print_city, print_date, print_watermark. Dilayani SchoolProfileService; logo diunggah ke storage/app/public/school/. |
 
 Catatan PostgreSQL: kolom `metadata` (activity_logs) dan `value` (system_settings)
 bertipe JSONB dengan index GIN. Di SQLite pengujian, JSONB diperlakukan sebagai JSON.
@@ -125,9 +126,12 @@ bertipe JSONB dengan index GIN. Di SQLite pengujian, JSONB diperlakukan sebagai 
 
 ## 6. Role dan permission
 
-| Fitur | Admin | Guru Mapel | Wali Kelas |
-|---|---|---|---|
-| Data master (jurusan, guru, siswa, kelas, mapel, tahun ajaran, semester, kurikulum) | CRUD penuh | — | — |
+| Fitur | Admin | Guru Mapel | Wali Kelas | Kepala Sekolah | Waka Kurikulum |
+|---|---|---|---|---|---|
+| Data master (jurusan, guru, siswa, kelas, mapel, tahun ajaran, semester, kurikulum) | CRUD penuh | — | — | — | — |
+| Profil Sekolah & Pengaturan Cetak | Kelola | — | — | — | — |
+| Monitoring status nilai + kelengkapan rapor | Ya | — | — | Ya | Ya |
+| Kunci rapor yang sudah diterbitkan | Ya | — | — | Ya | — |
 | Penugasan guru / wali kelas | Kelola | — | — |
 | Komponen penilaian | — | CRUD (mapel ampuannya) | — |
 | Input nilai | — | Ya, hanya penugasannya | — (read-only rekap) |

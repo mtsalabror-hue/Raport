@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\TeachingAssignmentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\InternshipController as AdminInternshipController;
 use App\Http\Controllers\Admin\ReportCardController as AdminReportCardController;
+use App\Http\Controllers\Admin\SchoolProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\SemesterController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Wali\HomeroomController;
 use App\Http\Controllers\Wali\InternshipController as WaliInternshipController;
 use App\Http\Controllers\Wali\ReportCardController as WaliReportCardController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MonitoringController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [LoginController::class, 'show'])->name('login');
@@ -54,6 +56,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/report-cards/{reportCard}/publish', [AdminReportCardController::class, 'publish'])->name('admin.report-cards.publish');
         Route::post('/report-cards/{reportCard}/lock', [AdminReportCardController::class, 'lock'])->name('admin.report-cards.lock');
         Route::get('/report-cards/{reportCard}/pdf', [AdminReportCardController::class, 'pdf'])->name('admin.report-cards.pdf');
+        Route::get('/school-profile', [SchoolProfileController::class, 'edit'])->name('admin.school-profile.edit');
+        Route::put('/school-profile', [SchoolProfileController::class, 'update'])->name('admin.school-profile.update');
+        Route::get('/print-settings', [SchoolProfileController::class, 'editPrint'])->name('admin.print-settings.edit');
+        Route::put('/print-settings', [SchoolProfileController::class, 'updatePrint'])->name('admin.print-settings.update');
         // Stage 11: PKL (admin kelola penuh).
         Route::get('/internships/monitoring', [AdminInternshipController::class, 'monitoring'])->name('admin.internships.monitoring');
         Route::get('/internships/recap', [AdminInternshipController::class, 'recap'])->name('admin.internships.recap');
@@ -135,5 +141,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/internships/recap', [WaliInternshipController::class, 'recap'])->name('wali.internships.recap');
         Route::get('/internships', [WaliInternshipController::class, 'index'])->name('wali.internships.index');
         Route::get('/competency-exams', [WaliInternshipController::class, 'competencyExams'])->name('wali.competency-exams.index');
+    });
+    // Fase A: prefix memakai slug peran (lihat redirect '/' di atas),
+    // berbeda dengan wali yang slug-nya wali_kelas tapi prefix-nya wali.
+    Route::middleware('role:kepala_sekolah')->prefix('kepala_sekolah')->group(function () {
+        Route::get('/dashboard', [MonitoringController::class, 'kepala'])->name('kepala.dashboard');
+        Route::post('/report-cards/{reportCard}/lock', [MonitoringController::class, 'lockReportCard'])->name('kepala.report-cards.lock');
+    });
+    Route::middleware('role:waka_kurikulum')->prefix('waka_kurikulum')->group(function () {
+        Route::get('/dashboard', [MonitoringController::class, 'waka'])->name('waka.dashboard');
     });
 });

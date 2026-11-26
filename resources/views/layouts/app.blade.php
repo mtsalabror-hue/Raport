@@ -126,8 +126,18 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
     'admin' => 'bg-blue-100 text-blue-800',
     'guru' => 'bg-emerald-100 text-emerald-800',
     'wali_kelas' => 'bg-violet-100 text-violet-800',
+    'kepala_sekolah' => 'bg-amber-100 text-amber-800',
+    'waka_kurikulum' => 'bg-cyan-100 text-cyan-800',
     default => 'bg-slate-100 text-slate-700',
   };
+  // Profil sekolah (Fase A): nama + logo untuk brand sidebar.
+  $__schoolName = 'SMK IT AL-ABROR';
+  $__logoUrl = null;
+  try {
+    $__profileService = app(\App\Services\SchoolProfileService::class);
+    $__schoolName = $__profileService->profile()['school_name'] ?? $__schoolName;
+    $__logoUrl = $__profileService->logoUrl();
+  } catch (\Throwable $__e) { $__schoolName = 'SMK IT AL-ABROR'; $__logoUrl = null; }
 @endphp
 
 <div class="min-h-screen flex bg-surface-dim">
@@ -141,12 +151,16 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
       <!-- Brand Header -->
       <div class="flex items-center justify-between gap-gutter-sm px-gutter-sm py-gutter-xs">
         <div class="flex items-center gap-gutter-sm">
+          @if($__logoUrl)
+            <img src="{{ $__logoUrl }}" alt="Logo sekolah" class="w-9 h-9 rounded object-contain bg-white shrink-0">
+          @else
           <div class="w-9 h-9 rounded bg-gradient-to-br from-blue-500 via-indigo-500 to-violet-600 flex items-center justify-center shrink-0 shadow">
             <span class="material-symbols-outlined text-on-primary text-headline-md" aria-hidden="true">school</span>
           </div>
+          @endif
           <div class="flex flex-col">
             <span class="font-headline text-headline-sm text-on-sidebar leading-tight">e-Rapor SMK</span>
-            <span class="font-label text-label-sm text-on-sidebar-muted">SMK IT AL-ABROR</span>
+            <span class="font-label text-label-sm text-on-sidebar-muted">{{ $__schoolName }}</span>
           </div>
         </div>
         <button type="button" aria-label="Tutup menu" onclick="toggleSidebar(false)" class="lg:hidden inline-flex items-center justify-center w-8 h-8 rounded text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover">
@@ -223,6 +237,15 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
             <span class="font-body text-body-md">UKK</span>
           </a>
+          <span class="px-gutter-md pt-gutter-md pb-gutter-xs font-label text-label-sm text-amber-300 uppercase">Pengaturan</span>
+          <a href="{{ route('admin.school-profile.edit') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.school-profile.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">apartment</span>
+            <span class="font-body text-body-md">Profil Sekolah</span>
+          </a>
+          <a href="{{ route('admin.print-settings.edit') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.print-settings.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">print</span>
+            <span class="font-body text-body-md">Pengaturan Cetak</span>
+          </a>
         @elseif($__roleSlug === 'guru')
           <a href="{{ url('/guru/dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/dashboard') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->is('guru/dashboard')) aria-current="page" @endif>
             <span class="material-symbols-outlined text-headline-md {{ request()->is('guru/dashboard') ? 'text-accent' : '' }}" @if(request()->is('guru/dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
@@ -297,6 +320,18 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
             <span class="font-body text-body-md">UKK</span>
           </a>
+        @elseif($__roleSlug === 'kepala_sekolah')
+          <a href="{{ route('kepala.dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('kepala.dashboard') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->routeIs('kepala.dashboard')) aria-current="page" @endif>
+            <span class="material-symbols-outlined text-headline-md {{ request()->routeIs('kepala.dashboard') ? 'text-accent' : '' }}" @if(request()->routeIs('kepala.dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
+            <span class="font-label text-label-lg">Dashboard</span>
+          </a>
+          <p class="px-gutter-md pt-gutter-md font-body text-body-sm text-on-sidebar-muted">Pemantauan nilai &amp; rapor. Kunci rapor yang sudah diterbitkan dari tabel di dashboard.</p>
+        @elseif($__roleSlug === 'waka_kurikulum')
+          <a href="{{ route('waka.dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('waka.dashboard') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->routeIs('waka.dashboard')) aria-current="page" @endif>
+            <span class="material-symbols-outlined text-headline-md {{ request()->routeIs('waka.dashboard') ? 'text-accent' : '' }}" @if(request()->routeIs('waka.dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
+            <span class="font-label text-label-lg">Dashboard</span>
+          </a>
+          <p class="px-gutter-md pt-gutter-md font-body text-body-sm text-on-sidebar-muted">Pemantauan nilai &amp; rapor (hanya-baca).</p>
         @endif
       </nav>
     </div>
@@ -323,7 +358,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
           <span class="material-symbols-outlined text-headline-md" aria-hidden="true">menu</span>
         </button>
         <div class="flex items-center gap-gutter-sm min-w-0">
-          <span class="font-headline text-headline-sm text-on-surface truncate">SMK IT AL-ABROR</span>
+          <span class="font-headline text-headline-sm text-on-surface truncate">{{ $__schoolName }}</span>
         </div>
       </div>
 

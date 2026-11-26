@@ -10,8 +10,7 @@ use App\Models\ReportCardSubject;
 use App\Models\StudentAchievement;
 use App\Models\StudentExtracurricular;
 use App\Models\SystemSetting;
-use App\Models\TeacherDescription;
-use App\Models\User;
+use App\Models\TeacherDescription;use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -188,8 +187,23 @@ class ReportCardService
 
         $schoolName = SystemSetting::query()->where('key', 'school_name')->first();
 
+        // Fase A: data profil sekolah + pengaturan cetak untuk PDF.
+        $profile = app(SchoolProfileService::class);
+        $print = $profile->printSettings();
+        $printDate = $print['print_date']
+            ? \Carbon\Carbon::parse($print['print_date'])->locale('id')->isoFormat('D MMMM Y')
+            : null;
+
         return array_merge($data, [
             'school_name' => $schoolName ? ($schoolName->value['value'] ?? null) : null,
+            'school_npsn' => $profile->get('school_npsn'),
+            'school_address' => $profile->get('school_address'),
+            'school_logo_path' => $profile->logoAbsolutePath(),
+            'principal_name' => $print['principal_name'],
+            'principal_nip' => $print['principal_nip'],
+            'print_city' => $print['print_city'],
+            'print_date_formatted' => $printDate,
+            'print_watermark' => $print['print_watermark'],
             'homeroom_teacher_name' => $homeroom?->teacher?->name,
             'issued_by_name' => $card->issuer?->name,
         ]);

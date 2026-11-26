@@ -20,8 +20,21 @@
 </head>
 <body>
 
+@if($print_watermark ?? false)
+<div style="position: fixed; top: 45%; left: 0; right: 0; text-align: center; font-size: 48px; font-weight: bold; color: #eeeeee;">{{ strtoupper($school_name ?? 'SMK IT AL-ABROR') }}</div>
+@endif
+
+@if($school_logo_path ?? null)
+<div class="center"><img src="{{ $school_logo_path }}" style="height: 56px;"></div>
+@endif
+
 <h1>RAPOR PESERTA DIDIK</h1>
-<p class="center small" style="margin: 0 0 10px 0;">{{ $school_name ?? 'E-Rapor SMK' }}</p>
+<p class="center small" style="margin: 0 0 2px 0;">{{ $school_name ?? 'SMK IT AL-ABROR' }}</p>
+@if(!empty($school_npsn) || !empty($school_address))
+<p class="center small" style="margin: 0 0 10px 0;">{{ trim(($school_npsn ? 'NPSN: '.$school_npsn : '').(($school_npsn && $school_address) ? ' | ' : '').($school_address ?? '')) }}</p>
+@else
+<p class="center small" style="margin: 0 0 10px 0;">&nbsp;</p>
+@endif
 
 <table class="info">
   <tr>
@@ -117,6 +130,10 @@
 
 <p class="small">Diterbitkan: {{ $report_card->issued_at ? $report_card->issued_at->format('d-m-Y H:i') : '-' }}@if($issued_by_name) oleh {{ $issued_by_name }}@endif. Status: {{ $report_card->documentLabel() }}.</p>
 
+@if(($print_city ?? null) || ($print_date_formatted ?? null))
+<p class="small">{{ $print_city ?? '' }}@if(($print_city ?? null) && ($print_date_formatted ?? null)), @endif{{ $print_date_formatted ?? '' }}</p>
+@endif
+
 <table class="sign">
   <tr>
     <td style="width: 33%;">
@@ -129,7 +146,12 @@
     </td>
     <td style="width: 34%;">
       Kepala Sekolah<br><br><br><br>
+      @if($principal_name ?? null)
+      ({{ $principal_name }})<br>
+      <span class="small">NIP. {{ $principal_nip ?? '-' }}</span>
+      @else
       (...........................)
+      @endif
     </td>
   </tr>
 </table>
