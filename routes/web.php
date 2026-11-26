@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\AttitudeController as AdminAttitudeController;
+use App\Http\Controllers\Admin\BackupController as AdminBackupController;
 use App\Http\Controllers\Admin\CompetencyExamController as AdminCompetencyExamController;
+use App\Http\Controllers\Admin\CsvImportController as AdminCsvImportController;
 use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Admin\CurriculumController;
 use App\Http\Controllers\Admin\HomeroomAssignmentController;
@@ -16,6 +18,7 @@ use App\Http\Controllers\Admin\SchoolProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\SemesterController;
+use App\Http\Controllers\Admin\TeachingCopyController as AdminTeachingCopyController;
 use App\Http\Controllers\Admin\SchoolClassController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController;
@@ -48,6 +51,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('academic_years', AcademicYearController::class)->names('admin.academic_years');
         Route::resource('semesters', SemesterController::class)->names('admin.semesters');
         Route::resource('curricula', CurriculumController::class)->names('admin.curricula');
+        // Fase E: salin mengajar (didefinisikan sebelum resource agar
+        // 'copy' tidak tertangkap sebagai {teaching_assignment}).
+        Route::get('/teaching-assignments/copy', [AdminTeachingCopyController::class, 'index'])->name('admin.teaching-copy.index');
+        Route::post('/teaching-assignments/copy', [AdminTeachingCopyController::class, 'store'])->name('admin.teaching-copy.store');
         Route::resource('teaching-assignments', TeachingAssignmentController::class)->names('admin.teaching-assignments');
         Route::resource('homeroom-assignments', HomeroomAssignmentController::class)->names('admin.homeroom-assignments');
         Route::resource('users', UserController::class)->names('admin.users');
@@ -73,6 +80,15 @@ Route::middleware('auth')->group(function () {
         Route::put('/school-profile', [SchoolProfileController::class, 'update'])->name('admin.school-profile.update');
         Route::get('/print-settings', [SchoolProfileController::class, 'editPrint'])->name('admin.print-settings.edit');
         Route::put('/print-settings', [SchoolProfileController::class, 'updatePrint'])->name('admin.print-settings.update');
+        // Fase E: backup & restore + impor CSV (admin saja).
+        Route::get('/backup', [AdminBackupController::class, 'index'])->name('admin.backup.index');
+        Route::get('/backup/download', [AdminBackupController::class, 'download'])->name('admin.backup.download');
+        Route::post('/backup/restore', [AdminBackupController::class, 'restore'])->name('admin.backup.restore');
+        Route::get('/import', [AdminCsvImportController::class, 'index'])->name('admin.import.index');
+        Route::get('/import/template/siswa', [AdminCsvImportController::class, 'templateStudents'])->name('admin.import.template-students');
+        Route::get('/import/template/guru', [AdminCsvImportController::class, 'templateTeachers'])->name('admin.import.template-teachers');
+        Route::post('/import/siswa', [AdminCsvImportController::class, 'importStudents'])->name('admin.import.students');
+        Route::post('/import/guru', [AdminCsvImportController::class, 'importTeachers'])->name('admin.import.teachers');
         // Stage 11: PKL (admin kelola penuh).
         Route::get('/internships/monitoring', [AdminInternshipController::class, 'monitoring'])->name('admin.internships.monitoring');
         Route::get('/internships/recap', [AdminInternshipController::class, 'recap'])->name('admin.internships.recap');

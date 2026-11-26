@@ -213,6 +213,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">assignment</span>
             <span class="font-body text-body-md">Mengajar</span>
           </a>
+          <a href="{{ route('admin.teaching-copy.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.teaching-copy.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">content_copy</span>
+            <span class="font-body text-body-md">Salin Mengajar</span>
+          </a>
           <a href="{{ route('admin.homeroom-assignments.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.homeroom-assignments.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">supervisor_account</span>
             <span class="font-body text-body-md">Wali Kelas</span>
@@ -261,6 +265,14 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
           <a href="{{ route('admin.print-settings.edit') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.print-settings.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">print</span>
             <span class="font-body text-body-md">Pengaturan Cetak</span>
+          </a>
+          <a href="{{ route('admin.backup.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.backup.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">backup</span>
+            <span class="font-body text-body-md">Backup &amp; Restore</span>
+          </a>
+          <a href="{{ route('admin.import.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.import.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">upload_file</span>
+            <span class="font-body text-body-md">Impor Data</span>
           </a>
         @elseif($__roleSlug === 'guru')
           <a href="{{ url('/guru/dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/dashboard') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->is('guru/dashboard')) aria-current="page" @endif>

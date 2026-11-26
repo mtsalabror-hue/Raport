@@ -9,6 +9,7 @@
         <div class="h-1 w-16 rounded-full bg-gradient-to-r from-blue-500 to-violet-500"></div>
     </div>
     <div class="flex items-center gap-gutter-sm shrink-0">
+        <a href="{{ route('admin.teaching-copy.index') }}" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-surface border border-outline-variant text-on-surface font-label text-label-lg hover:bg-surface-dim">Salin Mengajar</a>
         <a href="{{ route('admin.teaching-assignments.create') }}" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Tambah</a>
     </div>
 </section>
