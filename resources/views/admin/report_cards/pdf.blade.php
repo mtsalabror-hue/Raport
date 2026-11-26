@@ -49,6 +49,10 @@
     <td>NISN</td><td>:</td><td>{{ $student->nisn }}</td>
     <td>Semester</td><td>:</td><td>{{ $report_card->semester->name ?? '-' }}</td>
   </tr>
+  <tr>
+    <td>Kenaikan Kelas</td><td>:</td><td>{{ $promotionDecision ? $promotionDecision->label() : 'Belum ditetapkan' }}</td>
+    <td></td><td></td><td></td>
+  </tr>
 </table>
 
 <h2>Nilai Akhir Mata Pelajaran</h2>

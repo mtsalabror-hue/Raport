@@ -245,6 +245,14 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
             <span class="font-body text-body-md">UKK</span>
           </a>
+          <a href="{{ route('admin.promotions.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.promotions.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">trending_up</span>
+            <span class="font-body text-body-md">Naik Kelas</span>
+          </a>
+          <a href="{{ route('admin.alumni.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.alumni.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">school</span>
+            <span class="font-body text-body-md">Alumni</span>
+          </a>
           <span class="px-gutter-md pt-gutter-md pb-gutter-xs font-label text-label-sm text-amber-300 uppercase">Pengaturan</span>
           <a href="{{ route('admin.school-profile.edit') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.school-profile.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">apartment</span>
@@ -327,6 +335,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
           <a href="{{ route('wali.attitudes') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.attitudes.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">self_improvement</span>
             <span class="font-body text-body-md">Sikap</span>
+          </a>
+          <a href="{{ route('wali.promotions') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.promotions.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">trending_up</span>
+            <span class="font-body text-body-md">Kenaikan Kelas</span>
           </a>
           <a href="{{ route('wali.internships.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.internships.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">work</span>

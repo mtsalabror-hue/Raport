@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\AttitudeController as AdminAttitudeController;
 use App\Http\Controllers\Admin\CompetencyExamController as AdminCompetencyExamController;
+use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Admin\CurriculumController;
 use App\Http\Controllers\Admin\HomeroomAssignmentController;
 use App\Http\Controllers\Admin\TeachingAssignmentController;
@@ -63,6 +64,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/attitudes/recap', [AdminAttitudeController::class, 'recap'])->name('admin.attitudes.recap');
         // Fase C: CRUD proyek P5 (admin saja).
         Route::resource('p5-projects', P5ProjectController::class)->names('admin.p5-projects');
+        // Fase D: kenaikan kelas & kelulusan + alumni (admin saja).
+        Route::get('/promotions', [AdminPromotionController::class, 'index'])->name('admin.promotions.index');
+        Route::post('/promotions/graduate', [AdminPromotionController::class, 'graduate'])->name('admin.promotions.graduate');
+        Route::post('/promotions/promote', [AdminPromotionController::class, 'promote'])->name('admin.promotions.promote');
+        Route::get('/alumni', [AdminPromotionController::class, 'alumni'])->name('admin.alumni.index');
         Route::get('/school-profile', [SchoolProfileController::class, 'edit'])->name('admin.school-profile.edit');
         Route::put('/school-profile', [SchoolProfileController::class, 'update'])->name('admin.school-profile.update');
         Route::get('/print-settings', [SchoolProfileController::class, 'editPrint'])->name('admin.print-settings.edit');
@@ -145,6 +151,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/extracurriculars/master', [HomeroomController::class, 'storeExtracurricularMaster'])->name('wali.extracurriculars.master.store');
         Route::put('/extracurriculars/master/{extracurricular}', [HomeroomController::class, 'updateExtracurricularMaster'])->name('wali.extracurriculars.master.update');
         Route::delete('/extracurriculars/master/{extracurricular}', [HomeroomController::class, 'destroyExtracurricularMaster'])->name('wali.extracurriculars.master.destroy');
+        // Fase D: kenaikan kelas (penetapan naik/tidak naik, semester Genap saja).
+        Route::get('/promotions', [HomeroomController::class, 'promotions'])->name('wali.promotions');
+        Route::post('/promotions', [HomeroomController::class, 'storePromotions'])->name('wali.promotions.store');
         Route::get('/completeness', [HomeroomController::class, 'completeness'])->name('wali.completeness');
         Route::get('/preview/{student}', [HomeroomController::class, 'preview'])->name('wali.preview');
         Route::post('/submit', [HomeroomController::class, 'submit'])->name('wali.submit');

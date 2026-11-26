@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ActivityLog;
 use App\Models\HomeroomAssignment;
 use App\Models\P5Score;
+use App\Models\PromotionDecision;
 use App\Models\ReportCard;
 use App\Models\ReportCardApproval;
 use App\Models\ReportCardSubject;
@@ -161,6 +162,15 @@ class ReportCardService
         $homeroomNote = $card->notes()->where('note_type', 'wali_kelas')->latest()->first();
         $principalNote = $card->notes()->where('note_type', 'kepala_sekolah')->latest()->first();
 
+        // Fase D: keputusan kenaikan kelas, dibaca live per periode
+        // rapor (seperti sikap/P5 — bukan snapshot). Hanya ada pada
+        // semester Genap; kosong berarti 'Belum ditetapkan' di PDF.
+        $promotionDecision = PromotionDecision::query()
+            ->where('student_id', $student->id)
+            ->where('academic_year_id', $ay)
+            ->where('semester_id', $sem)
+            ->first();
+
         $snapshot = ReportCardSubject::query()
             ->with('subject')
             ->where('report_card_id', $card->id)
@@ -188,6 +198,7 @@ class ReportCardService
             'extracurriculars' => $extracurriculars,
             'attitudes' => $attitudes,
             'p5Scores' => $p5Scores,
+            'promotionDecision' => $promotionDecision,
             'homeroom_note' => $homeroomNote,
             'principal_note' => $principalNote,
             'snapshot' => $snapshot,

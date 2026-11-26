@@ -9,6 +9,7 @@ use App\Models\AssessmentScore;
 use App\Models\Extracurricular;
 use App\Models\HomeroomAssignment;
 use App\Models\P5Score;
+use App\Models\PromotionDecision;
 use App\Models\ReportCard;
 use App\Models\ReportCardNote;
 use App\Models\SchoolClass;
@@ -21,6 +22,7 @@ use App\Models\Teacher;
 use App\Models\TeacherDescription;
 use App\Services\AssessmentService;
 use App\Services\AttendanceService;
+use App\Services\PromotionService;
 use App\Services\ReportCardService;
 use App\Services\ReportCompletenessService;
 use Illuminate\Database\QueryException;
@@ -35,6 +37,7 @@ class HomeroomController extends Controller
         private AssessmentService $scores,
         private AttendanceService $attendance,
         private ReportCardService $reportCards,
+        private PromotionService $promotions,
     ) {
     }
 
@@ -1063,6 +1066,16 @@ class HomeroomController extends Controller
         $reportCard = $check['report_card'];
         $homeroomNote = $reportCard?->notes()->where('note_type', 'wali_kelas')->latest()->first();
 
+        // Fase D: keputusan kenaikan kelas, dibaca live per periode
+        // (seperti sikap/P5 — bukan snapshot). Hanya ditetapkan
+        // pada semester Genap; bila belum ada, tampil '-'/belum.
+        $promotionDecision = ($ay && $sem)
+            ? $this->promotions->decisionFor($student->id, $ay, $sem)
+            : null;
+        $promotionSemesterIsEven = $sem
+            ? PromotionService::isEvenSemester(Semester::findOrFail($sem))
+            : false;
+
         return view('wali.preview', array_merge($this->filterLists(), [
             'student' => $student,
             'filters' => $filters,
@@ -1073,9 +1086,139 @@ class HomeroomController extends Controller
             'extracurriculars' => $extracurriculars,
             'attitudes' => $attitudes,
             'p5Scores' => $p5Scores,
+            'promotionDecision' => $promotionDecision,
+            'promotionSemesterIsEven' => $promotionSemesterIsEven,
             'homeroomNote' => $homeroomNote,
             'reportCard' => $reportCard,
         ]));
+    }
+
+    // -----------------------------------------------------------------
+    // Kenaikan kelas (Fase D / RDM)
+    // -----------------------------------------------------------------
+
+    /**
+     * Form penetapan naik/tidak naik massal: satu halaman, semua
+     * siswa kelas wali. Hanya aktif pada semester Genap; pada
+     * semester Ganjil form ditampilkan non-aktif dengan penjelasan.
+     */
+    public function promotions(Request $request)
+    {
+        $filters = $request->validate([
+            'class_id' => 'nullable|integer',
+            'academic_year_id' => 'nullable|integer',
+            'semester_id' => 'nullable|integer',
+        ]);
+
+        $teacher = $this->resolveTeacher($request);
+        $classes = $this->myClasses($teacher->id);
+
+        [$defaultAy, $defaultSem] = $this->defaultPeriod($request, $teacher->id);
+        $filters['academic_year_id'] ??= $defaultAy;
+        $filters['semester_id'] ??= $defaultSem;
+
+        $students = collect();
+        $existing = collect();
+        $isEven = false;
+
+        if (! empty($filters['class_id']) && ! empty($filters['academic_year_id']) && ! empty($filters['semester_id'])) {
+            $this->assertHomeroom($teacher->id, $filters['class_id'], $filters['academic_year_id'], $filters['semester_id']);
+
+            $isEven = PromotionService::isEvenSemester(Semester::findOrFail($filters['semester_id']));
+
+            $students = Student::query()
+                ->where('class_id', $filters['class_id'])
+                ->where('is_alumni', false)
+                ->orderBy('name')
+                ->get();
+
+            $existing = PromotionDecision::query()
+                ->whereIn('student_id', $students->pluck('id'))
+                ->where('academic_year_id', $filters['academic_year_id'])
+                ->where('semester_id', $filters['semester_id'])
+                ->get()
+                ->keyBy('student_id');
+        }
+
+        return view('wali.promotions', array_merge($this->filterLists(), [
+            'filters' => $filters,
+            'classes' => $classes,
+            'students' => $students,
+            'existing' => $existing,
+            'isEven' => $isEven,
+            'statusLabels' => PromotionDecision::LABELS,
+        ]));
+    }
+
+    /**
+     * Simpan keputusan naik/tidak naik massal untuk satu kelas +
+     * periode dalam satu transaksi. Upsert per siswa. Ditolak bila
+     * semester bukan Genap.
+     */
+    public function storePromotions(Request $request)
+    {
+        $d = $request->validate([
+            'class_id' => 'required|integer|exists:classes,id',
+            'academic_year_id' => 'required|integer|exists:academic_years,id',
+            'semester_id' => 'required|integer|exists:semesters,id',
+            'records' => 'required|array|min:1',
+            'records.*.student_id' => 'required|integer|exists:students,id|distinct',
+            'records.*.status' => 'nullable|in:naik,tidak_naik',
+        ]);
+
+        $teacher = $this->resolveTeacher($request);
+        $this->assertHomeroom($teacher->id, $d['class_id'], $d['academic_year_id'], $d['semester_id']);
+
+        $semester = Semester::findOrFail($d['semester_id']);
+
+        if (! PromotionService::isEvenSemester($semester)) {
+            return back()->withErrors([
+                'semester_id' => 'Keputusan kenaikan kelas hanya dapat ditetapkan pada semester Genap.',
+            ]);
+        }
+
+        // Semua siswa pada payload harus anggota kelas yang dipilih.
+        $studentIds = collect($d['records'])->pluck('student_id')->unique()->values();
+        $inClass = Student::query()
+            ->whereIn('id', $studentIds)
+            ->where('class_id', $d['class_id'])
+            ->count();
+
+        if ($inClass !== $studentIds->count()) {
+            return back()->withErrors(['records' => 'Ada siswa yang bukan anggota kelas yang dipilih.']);
+        }
+
+        $saved = 0;
+
+        DB::transaction(function () use ($d, $request, &$saved) {
+            foreach ($d['records'] as $row) {
+                if (empty($row['status'])) {
+                    continue;
+                }
+
+                $decision = PromotionDecision::updateOrCreate(
+                    [
+                        'student_id' => $row['student_id'],
+                        'academic_year_id' => $d['academic_year_id'],
+                        'semester_id' => $d['semester_id'],
+                    ],
+                    [
+                        'class_id' => $d['class_id'],
+                        'status' => $row['status'],
+                        'decided_by' => $request->user()->id,
+                    ]
+                );
+
+                $this->logActivity($request, 'promotion_decision.saved', PromotionDecision::class, $decision->id, [
+                    'student_id' => $row['student_id'],
+                    'status' => $row['status'],
+                ]);
+
+                $saved++;
+            }
+        });
+
+        return back()->with('success', "{$saved} keputusan kenaikan kelas disimpan.");
     }
 
     // -----------------------------------------------------------------
