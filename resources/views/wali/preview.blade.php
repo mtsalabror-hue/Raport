@@ -115,6 +115,32 @@ Preview Rapor - {{ $student->name }}
 </tbody>
 </table></div></div>
 
+<h2 class="font-headline text-headline-md text-on-surface border-l-4 border-primary pl-3 mb-2">P5 (Projek Penguatan Profil Pelajar Pancasila)</h2>
+@if($p5Scores->isNotEmpty())
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden mb-6"><div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+<thead class="bg-sidebar">
+<tr>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Proyek (Tema)</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Dimensi</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Capaian</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Deskripsi</span></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+@foreach($p5Scores as $p)
+<tr class="hover:bg-surface-dim even:bg-blue-50/50 transition-colors duration-state-change">
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $p->project->tema ?? '-' }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $p->project->dimensi ?? '-' }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $p->capaian ?? '-' }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $p->deskripsi ?? '-' }}</td>
+</tr>
+@endforeach
+</tbody>
+</table></div></div>
+@else
+<p class="font-body text-body-md text-on-surface-muted mb-6">Belum ada nilai P5 pada periode ini.</p>
+@endif
+
 <h2 class="font-headline text-headline-md text-on-surface border-l-4 border-primary pl-3 mb-2">Catatan Wali Kelas</h2>
 <p class="font-body text-body-md text-on-surface mb-6">{{ $homeroomNote->content ?? 'Belum ada catatan wali kelas.' }}</p>
 

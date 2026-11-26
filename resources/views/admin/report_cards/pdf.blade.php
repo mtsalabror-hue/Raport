@@ -104,6 +104,20 @@
 <h2>Catatan Wali Kelas</h2>
 <p>{{ $homeroom_note->content ?? 'Tidak ada catatan wali kelas.' }}</p>
 
+<h2>P5 (Projek Penguatan Profil Pelajar Pancasila)</h2>
+@if($p5Scores->isNotEmpty())
+<table class="bordered">
+  <thead><tr><th style="width: 6%;">No</th><th style="text-align: left;">Proyek (Tema)</th><th style="text-align: left;">Dimensi</th><th style="text-align: left;">Capaian</th><th style="text-align: left;">Deskripsi</th></tr></thead>
+  <tbody>
+    @foreach($p5Scores as $i => $p)
+    <tr><td class="center">{{ $i + 1 }}</td><td>{{ $p->project->tema ?? '-' }}</td><td>{{ $p->project->dimensi ?? '-' }}</td><td>{{ $p->capaian ?? '-' }}</td><td>{{ $p->deskripsi ?? '-' }}</td></tr>
+    @endforeach
+  </tbody>
+</table>
+@else
+<p>Tidak ada nilai P5 pada periode ini.</p>
+@endif
+
 @if($principal_note)
 <h2>Catatan Kepala Sekolah</h2>
 <p>{{ $principal_note->content }}</p>

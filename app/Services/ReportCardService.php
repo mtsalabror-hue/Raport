@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ActivityLog;
 use App\Models\HomeroomAssignment;
+use App\Models\P5Score;
 use App\Models\ReportCard;
 use App\Models\ReportCardApproval;
 use App\Models\ReportCardSubject;
@@ -144,6 +145,19 @@ class ReportCardService
             ->get()
             ->keyBy('jenis');
 
+        // Fase C: nilai P5, dibaca live per periode rapor (seperti
+        // sikap/presensi — bukan snapshot). Bukan komponen
+        // kelengkapan: kosong berarti '-' di PDF.
+        $p5Scores = P5Score::query()
+            ->with('project')
+            ->where('student_id', $student->id)
+            ->whereHas('project', fn ($q) => $q
+                ->where('academic_year_id', $ay)
+                ->where('semester_id', $sem))
+            ->get()
+            ->sortBy(fn ($s) => $s->project->tema ?? '')
+            ->values();
+
         $homeroomNote = $card->notes()->where('note_type', 'wali_kelas')->latest()->first();
         $principalNote = $card->notes()->where('note_type', 'kepala_sekolah')->latest()->first();
 
@@ -173,6 +187,7 @@ class ReportCardService
             'achievements' => $achievements,
             'extracurriculars' => $extracurriculars,
             'attitudes' => $attitudes,
+            'p5Scores' => $p5Scores,
             'homeroom_note' => $homeroomNote,
             'principal_note' => $principalNote,
             'snapshot' => $snapshot,

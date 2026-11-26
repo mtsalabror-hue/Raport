@@ -8,6 +8,7 @@ use App\Models\ActivityLog;
 use App\Models\AssessmentScore;
 use App\Models\Extracurricular;
 use App\Models\HomeroomAssignment;
+use App\Models\P5Score;
 use App\Models\ReportCard;
 use App\Models\ReportCardNote;
 use App\Models\SchoolClass;
@@ -1047,6 +1048,18 @@ class HomeroomController extends Controller
             ->get()
             ->keyBy('jenis');
 
+        // Fase C: nilai P5 (bukan komponen kelengkapan; tampil bila
+        // sudah diisi, '-' bila kosong).
+        $p5Scores = P5Score::query()
+            ->with('project')
+            ->where('student_id', $student->id)
+            ->whereHas('project', fn ($q) => $q
+                ->where('academic_year_id', $ay)
+                ->where('semester_id', $sem))
+            ->get()
+            ->sortBy(fn ($s) => $s->project->tema ?? '')
+            ->values();
+
         $reportCard = $check['report_card'];
         $homeroomNote = $reportCard?->notes()->where('note_type', 'wali_kelas')->latest()->first();
 
@@ -1059,6 +1072,7 @@ class HomeroomController extends Controller
             'achievements' => $achievements,
             'extracurriculars' => $extracurriculars,
             'attitudes' => $attitudes,
+            'p5Scores' => $p5Scores,
             'homeroomNote' => $homeroomNote,
             'reportCard' => $reportCard,
         ]));

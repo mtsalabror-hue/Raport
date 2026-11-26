@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\HomeroomAssignmentController;
 use App\Http\Controllers\Admin\TeachingAssignmentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\InternshipController as AdminInternshipController;
+use App\Http\Controllers\Admin\P5ProjectController;
 use App\Http\Controllers\Admin\ReportCardController as AdminReportCardController;
 use App\Http\Controllers\Admin\SchoolProfileController;
 use App\Http\Controllers\Auth\LoginController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Teacher\AssessmentController;
 use App\Http\Controllers\Teacher\AttendanceController;
 use App\Http\Controllers\Teacher\InternshipController as TeacherInternshipController;
+use App\Http\Controllers\Teacher\P5Controller as TeacherP5Controller;
 use App\Http\Controllers\Wali\HomeroomController;
 use App\Http\Controllers\Wali\InternshipController as WaliInternshipController;
 use App\Http\Controllers\Wali\ReportCardController as WaliReportCardController;
@@ -59,6 +61,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/report-cards/{reportCard}/pdf', [AdminReportCardController::class, 'pdf'])->name('admin.report-cards.pdf');
         // Fase B: rekap sikap sosial & spiritual (hanya-baca).
         Route::get('/attitudes/recap', [AdminAttitudeController::class, 'recap'])->name('admin.attitudes.recap');
+        // Fase C: CRUD proyek P5 (admin saja).
+        Route::resource('p5-projects', P5ProjectController::class)->names('admin.p5-projects');
         Route::get('/school-profile', [SchoolProfileController::class, 'edit'])->name('admin.school-profile.edit');
         Route::put('/school-profile', [SchoolProfileController::class, 'update'])->name('admin.school-profile.update');
         Route::get('/print-settings', [SchoolProfileController::class, 'editPrint'])->name('admin.print-settings.edit');
@@ -112,6 +116,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/internships/assessments/{assessment}', [TeacherInternshipController::class, 'updateAssessment'])->name('guru.internships.assessments.update');
         Route::delete('/internships/assessments/{assessment}', [TeacherInternshipController::class, 'destroyAssessment'])->name('guru.internships.assessments.destroy');
         Route::get('/competency-exams', [TeacherInternshipController::class, 'competencyExams'])->name('guru.competency-exams.index');
+        // Fase C: P5 yang dikoordinatori guru (hanya proyeknya).
+        Route::get('/p5', [TeacherP5Controller::class, 'index'])->name('guru.p5.index');
+        Route::get('/p5/{project}', [TeacherP5Controller::class, 'show'])->name('guru.p5.show');
+        Route::post('/p5/{project}/scores', [TeacherP5Controller::class, 'storeScores'])->name('guru.p5.scores.store');
     });
     Route::middleware('role:wali_kelas')->prefix('wali')->group(function () {
         Route::get('/dashboard', [HomeroomController::class, 'dashboard'])->name('wali.dashboard');

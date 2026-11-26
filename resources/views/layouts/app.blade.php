@@ -233,6 +233,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">self_improvement</span>
             <span class="font-body text-body-md">Rekap Sikap</span>
           </a>
+          <a href="{{ route('admin.p5-projects.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.p5-projects.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">diversity_3</span>
+            <span class="font-body text-body-md">P5</span>
+          </a>
           <a href="{{ route('admin.internships.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.internships.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">work</span>
             <span class="font-body text-body-md">PKL</span>
@@ -282,6 +286,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
           <a href="{{ route('guru.competency-exams.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('guru.competency-exams.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
             <span class="font-body text-body-md">UKK</span>
+          </a>
+          <a href="{{ route('guru.p5.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('guru.p5.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">diversity_3</span>
+            <span class="font-body text-body-md">P5 Saya</span>
           </a>
         @elseif($__roleSlug === 'wali_kelas')
           <a href="{{ route('wali.dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.dashboard') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->routeIs('wali.dashboard')) aria-current="page" @endif>
