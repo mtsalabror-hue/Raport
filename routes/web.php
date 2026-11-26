@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\CurriculumController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\SchoolClassController;
@@ -30,17 +32,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'guru']);
         Route::get('/assessments', [AssessmentController::class, 'index']);
         Route::post('/assessments', [AssessmentController::class, 'store']);
+        Route::post('/assessments/bulk', [AssessmentController::class, 'storeBulk']);
         Route::post('/assessments/submit', [AssessmentController::class, 'submit']);
+        Route::post('/assessments/lock', [AssessmentController::class, 'lock']);
         Route::post('/assessments/revision', [AssessmentController::class, 'requestRevision']);
         Route::post('/assessments/revision/approve', [AssessmentController::class, 'approveRevision']);
         Route::get('/assessments/recap', [AssessmentController::class, 'recap']);
         Route::get('/assessments/calculate', [AssessmentController::class, 'calculate']);
-        Route::get('/descriptions', fn() => view('teacher.assessments.descriptions'));
+        Route::get('/assessments/history', [AssessmentController::class, 'history']);
+        Route::get('/descriptions', [AssessmentController::class, 'descriptions']);
         Route::post('/descriptions', [AssessmentController::class, 'storeDescription']);
-        Route::get('/components', fn() => view('teacher.assessments.components'));
+        Route::get('/components', [AssessmentController::class, 'components']);
         Route::post('/components', [AssessmentController::class, 'storeComponent']);
     });
     Route::middleware('role:wali_kelas')->prefix('wali')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'wali']);
+        Route::get('/assessments/recap', [AssessmentController::class, 'waliRecap']);
     });
 });
