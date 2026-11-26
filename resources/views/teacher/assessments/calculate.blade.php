@@ -1,41 +1,38 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Hasil Perhitungan</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="p-6">
-<h1 class="text-xl font-bold mb-4">Hasil Perhitungan Nilai Akhir</h1>
-<p class="text-sm text-gray-600 mb-4">Nilai akhir = (jumlah skor &times; bobot) dibagi (jumlah bobot komponen yang ada nilainya). Komponen kosong tidak dihitung sebagai 0. Perhitungan hanya berjalan jika total bobot komponen aktif tepat 100.</p>
+@extends('layouts.app')
+
+@section('title', 'Hasil Perhitungan')
+
+@section('content')
+<div class="flex flex-col gap-gutter-lg">
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md"><div class="flex flex-col gap-gutter-xs"><h1 class="font-headline text-headline-lg text-on-surface">Hasil Perhitungan Nilai Akhir</h1><p class="font-body text-body-md text-on-surface-muted">Nilai akhir = (jumlah skor &times; bobot) dibagi (jumlah bobot komponen yang ada nilainya). Komponen kosong tidak dihitung sebagai 0. Perhitungan hanya berjalan jika total bobot komponen aktif tepat 100.</p></div></section>
 
 @if(!empty($errors))
-<div class="bg-red-100 border border-red-400 text-red-800 px-4 py-2 rounded mb-4">
+<div class="bg-error-container border border-error/30 text-on-error-container px-4 py-2 rounded mb-4 font-body text-body-md">
 <ul class="list-disc pl-5">@foreach($errors as $k => $e)<li>{{ $k }}: {{ $e }}</li>@endforeach</ul>
 </div>
 @endif
 
-<table class="w-full border text-sm">
-<thead>
-<tr class="bg-gray-100">
-<th class="border px-2 py-2 text-left">Siswa - Mapel</th>
-<th class="border px-2 py-2">Nilai Akhir</th>
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+<thead class="bg-surface-dim border-b border-outline-variant">
+<tr>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Siswa - Mapel</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Nilai Akhir</span></th>
 </tr>
 </thead>
-<tbody>
+<tbody class="divide-y divide-outline-variant">
 @foreach($results as $k => $v)
-<tr>
-<td class="border px-2 py-1">{{ $k }}</td>
-<td class="border px-2 py-1">{{ $v }}</td>
+<tr class="hover:bg-surface-dim transition-colors duration-state-change">
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $k }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $v }}</td>
 </tr>
 @endforeach
 </tbody>
-</table>
+</table></div></div>
 
 @if(empty($results))
-<p class="text-gray-500 mt-4">Belum ada nilai untuk dihitung.</p>
+<p class="font-body text-body-md text-on-surface-muted mt-4">Belum ada nilai untuk dihitung.</p>
 @endif
 
-<div class="mt-4 text-sm"><a href="/guru/assessments" class="text-blue-600 underline">Kembali ke Input Nilai</a></div>
-</body>
-</html>
+<div class="mt-4 font-body text-body-md"><a href="/guru/assessments" class="text-primary hover:underline">Kembali ke Input Nilai</a></div>
+</div>
+@endsection

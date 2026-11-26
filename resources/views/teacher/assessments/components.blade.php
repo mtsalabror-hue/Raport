@@ -1,68 +1,66 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Komponen Penilaian</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="p-6">
-<h1 class="text-xl font-bold mb-4">Komponen &amp; Bobot Penilaian</h1>
+@extends('layouts.app')
+
+@section('title', 'Komponen Penilaian')
+
+@section('content')
+<div class="flex flex-col gap-gutter-lg">
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md"><div class="flex flex-col gap-gutter-xs"><h1 class="font-headline text-headline-lg text-on-surface">Komponen &amp; Bobot Penilaian</h1><p class="font-body text-body-md text-on-surface-muted">Total bobot komponen aktif dalam satu cakupan (mapel/kurikulum yang sama, atau global jika mapel dikosongkan) harus tepat 100 sebelum nilai akhir dapat dihitung. KKTP default 75, dapat diubah per komponen.</p></div></section>
 
 @if(session('success'))
-<div class="bg-green-100 border border-green-400 text-green-800 px-4 py-2 rounded mb-4">{{ session('success') }}</div>
+<div class="bg-success-container border border-success/30 text-on-success-container px-4 py-2 rounded mb-4 font-body text-body-md">{{ session('success') }}</div>
 @endif
 @if($errors->any())
-<div class="bg-red-100 border border-red-400 text-red-800 px-4 py-2 rounded mb-4">
+<div class="bg-error-container border border-error/30 text-on-error-container px-4 py-2 rounded mb-4 font-body text-body-md">
 <ul class="list-disc pl-5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
 </div>
 @endif
 
-<p class="text-sm text-gray-600 mb-4">Total bobot komponen aktif dalam satu cakupan (mapel/kurikulum yang sama, atau global jika mapel dikosongkan) harus tepat 100 sebelum nilai akhir dapat dihitung. KKTP default 75, dapat diubah per komponen.</p>
-
-<form method="POST" action="/guru/components" class="flex flex-wrap gap-2 mb-6">
+<div class="bg-surface border border-outline-variant rounded-md p-gutter-lg">
+<form method="POST" action="/guru/components" class="flex flex-wrap gap-2">
 @csrf
-<input name="name" placeholder="Nama komponen" class="border p-2 rounded" required>
-<select name="type" class="border p-2 rounded">
+<input name="name" placeholder="Nama komponen" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary" required>
+<select name="type" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
 <option value="formatif">Formatif</option>
 <option value="sumatif">Sumatif</option>
 <option value="praktik">Praktik</option>
 <option value="proyek">Proyek</option>
 </select>
-<input name="weight" type="number" min="0" max="100" step="0.01" placeholder="Bobot (%)" class="border p-2 rounded w-28" required>
-<select name="subject_id" class="border p-2 rounded">
+<input name="weight" type="number" min="0" max="100" step="0.01" placeholder="Bobot (%)" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary w-28" required>
+<select name="subject_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
 <option value="">Semua mapel (global)</option>
 @foreach($subjects as $s)<option value="{{ $s->id }}">{{ $s->name }} ({{ $s->code }})</option>@endforeach
 </select>
-<input name="kktp" type="number" min="0" max="100" step="0.01" placeholder="KKTP (75)" class="border p-2 rounded w-28">
-<button class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+<input name="kktp" type="number" min="0" max="100" step="0.01" placeholder="KKTP (75)" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary w-28">
+<button class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Simpan</button>
 </form>
+</div>
 
-<table class="w-full border text-sm">
-<thead>
-<tr class="bg-gray-100">
-<th class="border px-2 py-2 text-left">Nama</th>
-<th class="border px-2 py-2">Jenis</th>
-<th class="border px-2 py-2">Bobot</th>
-<th class="border px-2 py-2">Mapel</th>
-<th class="border px-2 py-2">KKTP</th>
-<th class="border px-2 py-2">Aktif</th>
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+<thead class="bg-surface-dim border-b border-outline-variant">
+<tr>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Nama</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Jenis</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Bobot</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Mapel</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">KKTP</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Aktif</span></th>
 </tr>
 </thead>
-<tbody>
+<tbody class="divide-y divide-outline-variant">
 @foreach($components as $c)
-<tr>
-<td class="border px-2 py-1">{{ $c->name }}</td>
-<td class="border px-2 py-1">{{ $c->type }}</td>
-<td class="border px-2 py-1">{{ $c->weight }}%</td>
-<td class="border px-2 py-1">{{ $c->subject?->name ?? 'Semua mapel' }}</td>
-<td class="border px-2 py-1">{{ $c->kktp }}</td>
-<td class="border px-2 py-1">{{ $c->is_active ? 'Ya' : 'Tidak' }}</td>
+<tr class="hover:bg-surface-dim transition-colors duration-state-change">
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $c->name }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $c->type }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $c->weight }}%</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $c->subject?->name ?? 'Semua mapel' }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $c->kktp }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $c->is_active ? 'Ya' : 'Tidak' }}</td>
 </tr>
 @endforeach
 </tbody>
-</table>
+</table></div></div>
 
-<p class="text-sm text-gray-600 mt-4">Total bobot aktif (global): {{ $components->whereNull('subject_id')->where('is_active', true)->sum('weight') }}%</p>
-<div class="mt-4 text-sm"><a href="/guru/assessments" class="text-blue-600 underline">Kembali ke Input Nilai</a></div>
-</body>
-</html>
+<p class="font-body text-body-md text-on-surface-muted mt-4">Total bobot aktif (global): {{ $components->whereNull('subject_id')->where('is_active', true)->sum('weight') }}%</p>
+<div class="mt-4 font-body text-body-md"><a href="/guru/assessments" class="text-primary hover:underline">Kembali ke Input Nilai</a></div>
+</div>
+@endsection

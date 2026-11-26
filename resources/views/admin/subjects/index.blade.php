@@ -1,14 +1,46 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><title>Mapel</title><script src="https://cdn.tailwindcss.com"></script></head>
-<body class="p-6">
-<h1 class="text-xl font-bold mb-4">Data Mata Pelajaran</h1>
-<a href="{{ route('admin.subjects.create') }}" class="bg-green-600 text-white px-3 py-2 rounded">Tambah</a>
-<table class="w-full mt-4 border"><thead><tr><th>Kode</th><th>Nama</th><th>Aksi</th></tr></thead><tbody>
-@foreach($items as $s)
-<tr><td>{{ $s->code }}</td><td>{{ $s->name }}</td><td>
-<a href="{{ route('admin.subjects.edit',$s) }}">Edit</a>
-<form method="POST" action="{{ route('admin.subjects.destroy',$s) }}" style="display:inline">@csrf @method('DELETE')<button>Hapus</button></form>
-</td></tr>
-@endforeach
-</tbody></table>
-{{ $items->links() }}
-</body></html>
+@extends('layouts.app')
+
+@section('title', 'Mapel')
+
+@section('content')
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
+    <div class="flex flex-col gap-gutter-xs">
+        <h1 class="font-headline text-headline-lg text-on-surface">Data Mata Pelajaran</h1>
+    </div>
+    <div class="flex items-center gap-gutter-sm shrink-0">
+        <a href="{{ route('admin.subjects.create') }}" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Tambah</a>
+    </div>
+</section>
+
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-dim border-b border-outline-variant">
+                <tr>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Kode</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Nama</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Aksi</span></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+                @foreach($items as $s)
+                <tr class="hover:bg-surface-dim transition-colors duration-state-change">
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $s->code }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $s->name }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">
+                        <div class="flex items-center gap-gutter-sm">
+                            <a href="{{ route('admin.subjects.edit',$s) }}" class="text-primary hover:underline">Edit</a>
+                            <form method="POST" action="{{ route('admin.subjects.destroy',$s) }}" class="inline">@csrf @method('DELETE')<button type="submit" class="inline-flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded bg-error text-on-error font-label text-label-md">Hapus</button></form>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-4">
+    {{ $items->links() }}
+</div>
+@endsection

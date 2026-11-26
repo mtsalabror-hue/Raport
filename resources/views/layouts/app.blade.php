@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@yield('title', 'Dashboard') — e-Rapor SMK IT AL-ABROR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#1d4ed8',
+        'on-primary': '#ffffff',
+        'primary-hover': '#0039b5',
+        'primary-container': '#dce1ff',
+        'on-primary-container': '#001551',
+        'sidebar': '#0b1530',
+        'on-sidebar': '#ffffff',
+        'on-sidebar-muted': '#a1aacd',
+        'sidebar-hover': '#111a35',
+        'sidebar-active': '#262f4c',
+        'accent': '#f59e0b',
+        'on-accent': '#2a1700',
+        'accent-container': '#ffeede',
+        'on-accent-container': '#653e00',
+        'surface': '#ffffff',
+        'surface-dim': '#f8fafc',
+        'surface-container': '#efefff',
+        'surface-container-high': '#e0e1f4',
+        'on-surface': '#0b1c30',
+        'on-surface-muted': '#505f76',
+        'outline': '#8292aa',
+        'outline-variant': '#e0e1f4',
+        'success': '#006e2d',
+        'on-success': '#ffffff',
+        'success-container': '#c5ffc8',
+        'on-success-container': '#002109',
+        'error': '#bf0715',
+        'on-error': '#ffffff',
+        'error-container': '#ffedea',
+        'on-error-container': '#410002',
+      },
+      borderRadius: {
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '32px',
+        'page-margin': '24px',
+      },
+      fontFamily: {
+        'display': ['"Red Hat Text"', 'sans-serif'],
+        'headline': ['"Red Hat Text"', 'sans-serif'],
+        'body': ['"Instrument Sans"', 'sans-serif'],
+        'label': ['"Instrument Sans"', 'sans-serif'],
+        'mono': ['"Spline Sans Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-md': ['36px', { lineHeight: '44px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'display-md-mobile': ['28px', { lineHeight: '36px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-lg': ['24px', { lineHeight: '32px', letterSpacing: '-0.25px', fontWeight: '700' }],
+        'headline-md': ['20px', { lineHeight: '28px', letterSpacing: '0px', fontWeight: '600' }],
+        'headline-sm': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '600' }],
+        'body-lg': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['12px', { lineHeight: '16px', letterSpacing: '0.1px', fontWeight: '400' }],
+        'label-lg': ['14px', { lineHeight: '20px', letterSpacing: '0.1px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.2px', fontWeight: '600' }],
+        'label-sm': ['11px', { lineHeight: '14px', letterSpacing: '0.3px', fontWeight: '600' }],
+        'mono-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '120ms',
+        'surface-enter': '220ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 1, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Red+Hat+Text:wght@500;600;700&amp;family=Spline+Sans+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased">
+
+@php
+  $__roleSlug = auth()->user()?->role?->slug;
+  $__activeYear = null;
+  try { $__activeYear = \App\Models\AcademicYear::where('is_active', true)->first(); } catch (\Throwable $__e) { $__activeYear = null; }
+@endphp
+
+<div class="min-h-screen flex bg-surface-dim">
+
+  <!-- Mobile Sidebar Backdrop -->
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-sidebar/50 z-30 hidden lg:hidden" onclick="toggleSidebar(false)"></div>
+
+  <!-- Left Navigation Sidebar (#0b1530) -->
+  <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 w-[260px] min-h-screen bg-sidebar text-on-sidebar flex flex-col justify-between transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-surface-enter ease-surface-enter shrink-0">
+    <div class="flex flex-col gap-gutter-lg p-gutter-md">
+      <!-- Brand Header -->
+      <div class="flex items-center justify-between gap-gutter-sm px-gutter-sm py-gutter-xs">
+        <div class="flex items-center gap-gutter-sm">
+          <div class="w-9 h-9 rounded bg-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-on-primary text-headline-md" aria-hidden="true">school</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-headline text-headline-sm text-on-sidebar leading-tight">e-Rapor SMK</span>
+            <span class="font-label text-label-sm text-on-sidebar-muted">SMK IT AL-ABROR</span>
+          </div>
+        </div>
+        <button type="button" aria-label="Tutup menu" onclick="toggleSidebar(false)" class="lg:hidden inline-flex items-center justify-center w-8 h-8 rounded text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover">
+          <span class="material-symbols-outlined text-headline-md" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <!-- Primary Navigation -->
+      <nav aria-label="Navigasi Utama" class="flex flex-col gap-gutter-xs">
+        @if($__roleSlug === 'admin')
+          <a href="{{ url('/admin/dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('admin/dashboard') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->is('admin/dashboard')) aria-current="page" @endif>
+            <span class="material-symbols-outlined text-headline-md {{ request()->is('admin/dashboard') ? 'text-accent' : '' }}" @if(request()->is('admin/dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
+            <span class="font-label text-label-lg">Dashboard</span>
+          </a>
+          <span class="px-gutter-md pt-gutter-md pb-gutter-xs font-label text-label-sm text-on-sidebar-muted uppercase">Data Master</span>
+          <a href="{{ route('admin.academic_years.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.academic_years.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">calendar_month</span>
+            <span class="font-body text-body-md">Tahun Ajaran</span>
+          </a>
+          <a href="{{ route('admin.semesters.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.semesters.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">date_range</span>
+            <span class="font-body text-body-md">Semester</span>
+          </a>
+          <a href="{{ route('admin.departments.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.departments.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">domain</span>
+            <span class="font-body text-body-md">Jurusan</span>
+          </a>
+          <a href="{{ route('admin.classes.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.classes.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">meeting_room</span>
+            <span class="font-body text-body-md">Kelas</span>
+          </a>
+          <a href="{{ route('admin.subjects.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.subjects.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">menu_book</span>
+            <span class="font-body text-body-md">Mata Pelajaran</span>
+          </a>
+          <a href="{{ route('admin.curricula.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.curricula.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">book</span>
+            <span class="font-body text-body-md">Kurikulum</span>
+          </a>
+          <a href="{{ route('admin.teachers.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.teachers.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">badge</span>
+            <span class="font-body text-body-md">Guru</span>
+          </a>
+          <a href="{{ route('admin.students.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.students.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">groups</span>
+            <span class="font-body text-body-md">Siswa</span>
+          </a>
+          <span class="px-gutter-md pt-gutter-md pb-gutter-xs font-label text-label-sm text-on-sidebar-muted uppercase">Penugasan</span>
+          <a href="{{ route('admin.teaching-assignments.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">assignment</span>
+            <span class="font-body text-body-md">Mengajar</span>
+          </a>
+          <a href="{{ route('admin.homeroom-assignments.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.homeroom-assignments.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">supervisor_account</span>
+            <span class="font-body text-body-md">Wali Kelas</span>
+          </a>
+          <a href="{{ route('admin.users.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.users.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">manage_accounts</span>
+            <span class="font-body text-body-md">Pengguna</span>
+          </a>
+          <a href="{{ url('/admin/attendance/monitoring') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('admin/attendance/monitoring') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">event_available</span>
+            <span class="font-body text-body-md">Monitoring Presensi</span>
+          </a>
+          <a href="{{ route('admin.report-cards.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.report-cards.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">description</span>
+            <span class="font-body text-body-md">Rapor</span>
+          </a>
+          <a href="{{ route('admin.internships.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.internships.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">work</span>
+            <span class="font-body text-body-md">PKL</span>
+          </a>
+          <a href="{{ route('admin.competency-exams.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.competency-exams.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
+            <span class="font-body text-body-md">UKK</span>
+          </a>
+        @elseif($__roleSlug === 'guru')
+          <a href="{{ url('/guru/dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/dashboard') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->is('guru/dashboard')) aria-current="page" @endif>
+            <span class="material-symbols-outlined text-headline-md {{ request()->is('guru/dashboard') ? 'text-accent' : '' }}" @if(request()->is('guru/dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
+            <span class="font-label text-label-lg">Dashboard</span>
+          </a>
+          <a href="{{ url('/guru/assessments') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/assessments') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">edit_note</span>
+            <span class="font-body text-body-md">Input Nilai</span>
+          </a>
+          <a href="{{ url('/guru/assessments/recap') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/assessments/recap', 'guru/assessments/history', 'guru/assessments/calculate') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">table_chart</span>
+            <span class="font-body text-body-md">Rekap Nilai</span>
+          </a>
+          <a href="{{ url('/guru/components') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/components') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">tune</span>
+            <span class="font-body text-body-md">Komponen Nilai</span>
+          </a>
+          <a href="{{ url('/guru/descriptions') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/descriptions') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">description</span>
+            <span class="font-body text-body-md">Deskripsi Nilai</span>
+          </a>
+          <a href="{{ url('/guru/attendance') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('guru/attendance*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">event_available</span>
+            <span class="font-body text-body-md">Presensi</span>
+          </a>
+          <a href="{{ route('guru.internships.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('guru.internships.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">work</span>
+            <span class="font-body text-body-md">PKL</span>
+          </a>
+          <a href="{{ route('guru.competency-exams.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('guru.competency-exams.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
+            <span class="font-body text-body-md">UKK</span>
+          </a>
+        @elseif($__roleSlug === 'wali_kelas')
+          <a href="{{ route('wali.dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.dashboard') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->routeIs('wali.dashboard')) aria-current="page" @endif>
+            <span class="material-symbols-outlined text-headline-md {{ request()->routeIs('wali.dashboard') ? 'text-accent' : '' }}" @if(request()->routeIs('wali.dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
+            <span class="font-label text-label-lg">Dashboard</span>
+          </a>
+          <a href="{{ route('wali.students') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.students') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">groups</span>
+            <span class="font-body text-body-md">Siswa Saya</span>
+          </a>
+          <a href="{{ route('wali.completeness') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.completeness') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">fact_check</span>
+            <span class="font-body text-body-md">Kelengkapan Rapor</span>
+          </a>
+          <a href="{{ route('wali.report-cards.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.report-cards.*', 'wali.preview', 'wali.history') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">description</span>
+            <span class="font-body text-body-md">Rapor</span>
+          </a>
+          <a href="{{ url('/wali/attendance/recap') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->is('wali/attendance/*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">event_available</span>
+            <span class="font-body text-body-md">Presensi</span>
+          </a>
+          <a href="{{ route('wali.extracurriculars') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.extracurriculars.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">star_half</span>
+            <span class="font-body text-body-md">Ekstrakurikuler</span>
+          </a>
+          <a href="{{ route('wali.achievements') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.achievements.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">emoji_events</span>
+            <span class="font-body text-body-md">Prestasi</span>
+          </a>
+          <a href="{{ route('wali.notes') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.notes.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">edit_note</span>
+            <span class="font-body text-body-md">Catatan</span>
+          </a>
+          <a href="{{ route('wali.internships.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.internships.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">work</span>
+            <span class="font-body text-body-md">PKL</span>
+          </a>
+          <a href="{{ route('wali.competency-exams.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.competency-exams.*') ? 'bg-sidebar-active text-on-sidebar' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
+            <span class="font-body text-body-md">UKK</span>
+          </a>
+        @endif
+      </nav>
+    </div>
+
+    <!-- Sidebar Footer: Academic Year Info -->
+    <div class="p-gutter-md border-t border-sidebar-active">
+      <div class="bg-sidebar-hover rounded p-gutter-md flex flex-col gap-gutter-xs">
+        <span class="font-label text-label-sm text-on-sidebar-muted uppercase">Tahun Pelajaran</span>
+        @if($__activeYear)
+          <span class="font-label text-label-lg text-on-sidebar tabular-nums">{{ $__activeYear->name }}</span>
+        @endif
+        <span class="font-body text-body-sm text-on-sidebar-muted">Kurikulum Merdeka SMK</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Workspace Column -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Sticky Top Bar -->
+    <header class="sticky top-0 z-20 h-16 bg-surface border-b border-outline-variant px-page-margin flex items-center justify-between gap-gutter-md">
+      <div class="flex items-center gap-gutter-md min-w-0">
+        <button type="button" aria-label="Buka menu navigasi" onclick="toggleSidebar(true)" class="lg:hidden inline-flex items-center justify-center w-9 h-9 rounded border border-outline-variant text-on-surface hover:bg-surface-dim">
+          <span class="material-symbols-outlined text-headline-md" aria-hidden="true">menu</span>
+        </button>
+        <div class="flex items-center gap-gutter-sm min-w-0">
+          <span class="font-headline text-headline-sm text-on-surface truncate">SMK IT AL-ABROR</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-gutter-md">
+        <div class="hidden md:flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs">
+          <span class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+            <span class="font-label text-label-md">{{ strtoupper(implode('', array_map(fn($w) => mb_substr($w, 0, 1), array_slice(explode(' ', trim(auth()->user()->name ?? '?')), 0, 2)))) }}</span>
+          </span>
+          <div class="flex flex-col items-start text-left">
+            <span class="font-label text-label-md text-on-surface leading-tight">{{ auth()->user()->name }}</span>
+            <span class="font-body text-body-sm text-on-surface-muted leading-tight">{{ auth()->user()->role->name ?? '' }}</span>
+          </div>
+        </div>
+        <form method="POST" action="/logout">
+          @csrf
+          <button type="submit" class="inline-flex items-center gap-gutter-xs px-gutter-md py-gutter-sm rounded bg-surface border border-outline-variant text-on-surface font-label text-label-lg hover:bg-surface-dim transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-sm" aria-hidden="true">logout</span>
+            <span class="hidden sm:inline">Keluar</span>
+          </button>
+        </form>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-page-margin max-w-[1280px] w-full mx-auto flex flex-col gap-section">
+      @yield('content')
+    </main>
+  </div>
+</div>
+
+<script>
+function toggleSidebar(open) {
+  var sidebar = document.getElementById('app-sidebar');
+  var backdrop = document.getElementById('sidebar-backdrop');
+  if (open) {
+    sidebar.classList.remove('-translate-x-full');
+    backdrop.classList.remove('hidden');
+  } else {
+    sidebar.classList.add('-translate-x-full');
+    backdrop.classList.add('hidden');
+  }
+}
+</script>
+@stack('scripts')
+</body>
+</html>

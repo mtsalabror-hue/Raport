@@ -1,19 +1,51 @@
-<!DOCTYPE html>
-<html lang="id"><head><meta charset="UTF-8"><title>Pengguna</title><script src="https://cdn.tailwindcss.com"></script></head>
-<body class="p-6">
-<h1 class="text-xl font-bold mb-4">Pengguna</h1>
-<a href="{{ route('admin.users.create') }}" class="bg-green-600 text-white px-3 py-2 rounded">Tambah</a>
-<form method="GET" class="mt-4 flex gap-2">
-<input name="q" value="{{ $q }}" placeholder="Cari nama/email" class="border p-2">
-<button class="bg-blue-600 text-white px-3 py-2 rounded">Cari</button>
+@extends('layouts.app')
+
+@section('title', 'Pengguna')
+
+@section('content')
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
+    <div class="flex flex-col gap-gutter-xs">
+        <h1 class="font-headline text-headline-lg text-on-surface">Pengguna</h1>
+    </div>
+    <div class="flex items-center gap-gutter-sm shrink-0">
+        <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Tambah</a>
+    </div>
+</section>
+
+<form method="GET" class="flex flex-wrap gap-2 mb-6">
+    <input name="q" value="{{ $q }}" placeholder="Cari nama/email" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+    <button class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Cari</button>
 </form>
-<table class="w-full mt-4 border"><thead><tr><th class="border p-2">Nama</th><th class="border p-2">Email</th><th class="border p-2">Role</th><th class="border p-2">Aktif</th><th class="border p-2">Aksi</th></tr></thead><tbody>
-@foreach($items as $u)
-<tr><td class="border p-2">{{ $u->name }}</td><td class="border p-2">{{ $u->email }}</td><td class="border p-2">{{ $u->role->name ?? '-' }}</td><td class="border p-2">{{ $u->is_active ? 'Ya' : 'Tidak' }}</td><td class="border p-2">
-<a href="{{ route('admin.users.edit',$u) }}">Edit</a>
-<form method="POST" action="{{ route('admin.users.destroy',$u) }}" style="display:inline">@csrf @method('DELETE')<button>Hapus</button></form>
-</td></tr>
-@endforeach
-</tbody></table>
+
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-dim border-b border-outline-variant">
+                <tr>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Nama</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Email</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Role</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Aktif</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Aksi</span></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+                @foreach($items as $u)
+                <tr class="hover:bg-surface-dim transition-colors duration-state-change">
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $u->name }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $u->email }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $u->role->name ?? '-' }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $u->is_active ? 'Ya' : 'Tidak' }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">
+                        <a href="{{ route('admin.users.edit',$u) }}" class="text-primary hover:underline">Edit</a>
+                        <form method="POST" action="{{ route('admin.users.destroy',$u) }}" style="display:inline">@csrf @method('DELETE')<button class="inline-flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded bg-error text-on-error font-label text-label-md">Hapus</button></form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
 {{ $items->links() }}
-</body></html>
+@endsection

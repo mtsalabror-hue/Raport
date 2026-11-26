@@ -1,99 +1,107 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Monitoring Presensi &amp; Nilai</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="p-6">
-<h1 class="text-xl font-bold mb-4">Monitoring Presensi &amp; Nilai (Admin)</h1>
+@extends('layouts.app')
+
+@section('title', 'Monitoring Presensi & Nilai')
+
+@section('content')
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
+    <div class="flex flex-col gap-gutter-xs">
+        <h1 class="font-headline text-headline-lg text-on-surface">Monitoring Presensi &amp; Nilai (Admin)</h1>
+    </div>
+</section>
 
 @if($errors->any())
-<div class="bg-red-100 border border-red-400 text-red-800 px-4 py-2 rounded mb-4">
-<ul class="list-disc pl-5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
+<div class="bg-error-container border border-error/30 text-on-error-container px-4 py-2 rounded mb-4 font-body text-body-md">
+    <ul class="list-disc pl-5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
 </div>
 @endif
 
 <form method="GET" action="/admin/attendance/monitoring" class="flex flex-wrap gap-2 mb-6">
-<select name="academic_year_id" class="border p-2 rounded">
-<option value="">Semua Tahun Ajaran</option>
-@foreach($academicYears as $y)<option value="{{ $y->id }}" @selected(($filters['academic_year_id'] ?? null) == $y->id)>{{ $y->name }}</option>@endforeach
-</select>
-<select name="semester_id" class="border p-2 rounded">
-<option value="">Semua Semester</option>
-@foreach($semesters as $s)<option value="{{ $s->id }}" @selected(($filters['semester_id'] ?? null) == $s->id)>{{ $s->name }}</option>@endforeach
-</select>
-<select name="teacher_id" class="border p-2 rounded">
-<option value="">Semua Guru</option>
-@foreach($teachers as $t)<option value="{{ $t->id }}" @selected(($filters['teacher_id'] ?? null) == $t->id)>{{ $t->name }}</option>@endforeach
-</select>
-<button class="bg-blue-600 text-white px-4 py-2 rounded">Filter</button>
+    <select name="academic_year_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+        <option value="">Semua Tahun Ajaran</option>
+        @foreach($academicYears as $y)<option value="{{ $y->id }}" @selected(($filters['academic_year_id'] ?? null) == $y->id)>{{ $y->name }}</option>@endforeach
+    </select>
+    <select name="semester_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+        <option value="">Semua Semester</option>
+        @foreach($semesters as $s)<option value="{{ $s->id }}" @selected(($filters['semester_id'] ?? null) == $s->id)>{{ $s->name }}</option>@endforeach
+    </select>
+    <select name="teacher_id" class="border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+        <option value="">Semua Guru</option>
+        @foreach($teachers as $t)<option value="{{ $t->id }}" @selected(($filters['teacher_id'] ?? null) == $t->id)>{{ $t->name }}</option>@endforeach
+    </select>
+    <button class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Filter</button>
 </form>
 
-<h2 class="text-lg font-semibold mb-2">Nilai Belum Dikirim (status draft)</h2>
-<p class="text-sm text-gray-600 mb-4">Total {{ $totalDrafts }} nilai masih berstatus draft dan belum dikirim oleh guru.</p>
+<h2 class="font-headline text-headline-md text-on-surface">Nilai Belum Dikirim (status draft)</h2>
+<p class="font-body text-body-md text-on-surface-muted">Total {{ $totalDrafts }} nilai masih berstatus draft dan belum dikirim oleh guru.</p>
 
-<table class="w-full border text-sm mb-8">
-<thead>
-<tr class="bg-gray-100">
-<th class="border px-2 py-2 text-left">Guru</th>
-<th class="border px-2 py-2 text-left">Mapel</th>
-<th class="border px-2 py-2 text-left">Kelas</th>
-<th class="border px-2 py-2 text-left">Tahun Ajaran</th>
-<th class="border px-2 py-2 text-left">Semester</th>
-<th class="border px-2 py-2">Jumlah Nilai Draft</th>
-<th class="border px-2 py-2">Jumlah Siswa</th>
-</tr>
-</thead>
-<tbody>
-@foreach($drafts as $d)
-<tr>
-<td class="border px-2 py-1">{{ $d->teacher?->name ?? '-' }}</td>
-<td class="border px-2 py-1">{{ $d->subject?->name ?? '-' }}</td>
-<td class="border px-2 py-1">{{ $d->schoolClass?->name ?? '-' }}</td>
-<td class="border px-2 py-1">{{ $d->academicYear?->name ?? '-' }}</td>
-<td class="border px-2 py-1">{{ $d->semester?->name ?? '-' }}</td>
-<td class="border px-2 py-1">{{ $d->draft_count }}</td>
-<td class="border px-2 py-1">{{ $d->student_count }}</td>
-</tr>
-@endforeach
-</tbody>
-</table>
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-dim border-b border-outline-variant">
+                <tr>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Guru</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Mapel</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Kelas</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Tahun Ajaran</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Semester</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Jumlah Nilai Draft</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Jumlah Siswa</span></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+                @foreach($drafts as $d)
+                <tr class="hover:bg-surface-dim transition-colors duration-state-change">
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $d->teacher?->name ?? '-' }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $d->subject?->name ?? '-' }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $d->schoolClass?->name ?? '-' }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $d->academicYear?->name ?? '-' }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $d->semester?->name ?? '-' }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $d->draft_count }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $d->student_count }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 
 @if($drafts->isEmpty())
-<p class="text-gray-500 mb-8">Tidak ada nilai draft untuk filter ini.</p>
+<p class="font-body text-body-md text-on-surface-muted">Tidak ada nilai draft untuk filter ini.</p>
 @endif
 
-<h2 class="text-lg font-semibold mb-2">Rekap Presensi per Kelas (per semester)</h2>
+<h2 class="font-headline text-headline-md text-on-surface">Rekap Presensi per Kelas (per semester)</h2>
 @if(empty($attendanceByClass))
-<p class="text-gray-500">Pilih tahun ajaran dan semester untuk menampilkan rekap presensi per kelas.</p>
+<p class="font-body text-body-md text-on-surface-muted">Pilih tahun ajaran dan semester untuk menampilkan rekap presensi per kelas.</p>
 @else
-<table class="w-full border text-sm">
-<thead>
-<tr class="bg-gray-100">
-<th class="border px-2 py-2 text-left">Kelas</th>
-<th class="border px-2 py-2">Hadir</th>
-<th class="border px-2 py-2">Sakit</th>
-<th class="border px-2 py-2">Izin</th>
-<th class="border px-2 py-2">Tanpa Ket.</th>
-<th class="border px-2 py-2">Total</th>
-<th class="border px-2 py-2">% Hadir</th>
-</tr>
-</thead>
-<tbody>
-@foreach($attendanceByClass as $classId => $row)
-<tr>
-<td class="border px-2 py-1">{{ $classes->firstWhere('id', $classId)?->name ?? $classId }}</td>
-<td class="border px-2 py-1">{{ $row['hadir'] }}</td>
-<td class="border px-2 py-1">{{ $row['sakit'] }}</td>
-<td class="border px-2 py-1">{{ $row['izin'] }}</td>
-<td class="border px-2 py-1">{{ $row['alpa'] }}</td>
-<td class="border px-2 py-1">{{ $row['total'] }}</td>
-<td class="border px-2 py-1">{{ $row['persentase_hadir'] !== null ? $row['persentase_hadir'].'%' : '-' }}</td>
-</tr>
-@endforeach
-</tbody>
-</table>
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-dim border-b border-outline-variant">
+                <tr>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Kelas</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Hadir</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Sakit</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Izin</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Tanpa Ket.</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Total</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">% Hadir</span></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant">
+                @foreach($attendanceByClass as $classId => $row)
+                <tr class="hover:bg-surface-dim transition-colors duration-state-change">
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $classes->firstWhere('id', $classId)?->name ?? $classId }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $row['hadir'] }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $row['sakit'] }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $row['izin'] }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $row['alpa'] }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $row['total'] }}</td>
+                    <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $row['persentase_hadir'] !== null ? $row['persentase_hadir'].'%' : '-' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 @endif
-</body>
-</html>
+@endsection

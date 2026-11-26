@@ -1,11 +1,32 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><title>Edit TA</title></head>
-<body class="p-6">
-<h1 class="text-xl font-bold mb-4">Edit Tahun Ajaran</h1>
-<form method="POST" action="/admin/academic_years/{{ $academicYear->id }}">
-@csrf @method('PUT')
-<input name="name" value="{{ $academicYear->name }}" class="border p-2 mb-2">
-<input name="start_date" type="date" value="{{ $academicYear->start_date }}" class="border p-2 mb-2">
-<input name="end_date" type="date" value="{{ $academicYear->end_date }}" class="border p-2 mb-2">
-<button class="bg-blue-600 text-white px-3 py-2">Simpan</button>
-</form>
-</body></html>
+@extends('layouts.app')
+
+@section('title', 'Edit TA')
+
+@section('content')
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
+    <div class="flex flex-col gap-gutter-xs">
+        <h1 class="font-headline text-headline-lg text-on-surface">Edit Tahun Ajaran</h1>
+    </div>
+</section>
+
+<div class="bg-surface border border-outline-variant rounded-md p-gutter-lg">
+    <form method="POST" action="/admin/academic_years/{{ $academicYear->id }}" class="flex flex-col gap-gutter-md">
+        @csrf @method('PUT')
+        <div class="flex flex-col gap-gutter-xs">
+            <label for="name" class="font-label text-label-md text-on-surface">Nama</label>
+            <input id="name" name="name" value="{{ $academicYear->name }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+        </div>
+        <div class="flex flex-col gap-gutter-xs">
+            <label for="start_date" class="font-label text-label-md text-on-surface">Tanggal Mulai</label>
+            <input id="start_date" name="start_date" type="date" value="{{ $academicYear->start_date }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+        </div>
+        <div class="flex flex-col gap-gutter-xs">
+            <label for="end_date" class="font-label text-label-md text-on-surface">Tanggal Selesai</label>
+            <input id="end_date" name="end_date" type="date" value="{{ $academicYear->end_date }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-1 focus:ring-primary">
+        </div>
+        <div>
+            <button type="submit" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Simpan</button>
+        </div>
+    </form>
+</div>
+@endsection

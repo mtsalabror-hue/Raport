@@ -1,76 +1,74 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Riwayat Perubahan Nilai</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="p-6">
-<h1 class="text-xl font-bold mb-4">Riwayat Perubahan Nilai</h1>
+@extends('layouts.app')
+
+@section('title', 'Riwayat Perubahan Nilai')
+
+@section('content')
+<div class="flex flex-col gap-gutter-lg">
+<section class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md"><div class="flex flex-col gap-gutter-xs"><h1 class="font-headline text-headline-lg text-on-surface">Riwayat Perubahan Nilai</h1></div></section>
 
 @if(session('success'))
-<div class="bg-green-100 border border-green-400 text-green-800 px-4 py-2 rounded mb-4">{{ session('success') }}</div>
+<div class="bg-success-container border border-success/30 text-on-success-container px-4 py-2 rounded mb-4 font-body text-body-md">{{ session('success') }}</div>
 @endif
 @if($errors->any())
-<div class="bg-red-100 border border-red-400 text-red-800 px-4 py-2 rounded mb-4">
+<div class="bg-error-container border border-error/30 text-on-error-container px-4 py-2 rounded mb-4 font-body text-body-md">
 <ul class="list-disc pl-5">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
 </div>
 @endif
 
-<h2 class="text-lg font-semibold mt-6 mb-2">Pengajuan Revisi</h2>
-<table class="w-full border text-sm mb-6">
-<thead>
-<tr class="bg-gray-100">
-<th class="border px-2 py-2 text-left">Siswa</th>
-<th class="border px-2 py-2 text-left">Mapel</th>
-<th class="border px-2 py-2">Nilai Lama</th>
-<th class="border px-2 py-2">Nilai Baru</th>
-<th class="border px-2 py-2 text-left">Alasan</th>
-<th class="border px-2 py-2">Status</th>
-<th class="border px-2 py-2">Diajukan</th>
+<h2 class="font-headline text-headline-md text-on-surface mt-6 mb-2">Pengajuan Revisi</h2>
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden mb-6"><div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+<thead class="bg-surface-dim border-b border-outline-variant">
+<tr>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Siswa</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Mapel</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Nilai Lama</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Nilai Baru</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Alasan</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Status</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Diajukan</span></th>
 </tr>
 </thead>
-<tbody>
+<tbody class="divide-y divide-outline-variant">
 @foreach($revisions as $r)
-<tr>
-<td class="border px-2 py-1">{{ $r->score?->student?->name }}</td>
-<td class="border px-2 py-1">{{ $r->score?->subject?->name }}</td>
-<td class="border px-2 py-1">{{ $r->old_score }}</td>
-<td class="border px-2 py-1">{{ $r->new_score }}</td>
-<td class="border px-2 py-1">{{ $r->reason }}</td>
-<td class="border px-2 py-1">{{ $r->status }}</td>
-<td class="border px-2 py-1">{{ $r->created_at }}</td>
+<tr class="hover:bg-surface-dim transition-colors duration-state-change">
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $r->score?->student?->name }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $r->score?->subject?->name }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $r->old_score }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $r->new_score }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $r->reason }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $r->status }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $r->created_at }}</td>
 </tr>
 @endforeach
 </tbody>
-</table>
+</table></div></div>
 {{ $revisions->links() }}
 
-<h2 class="text-lg font-semibold mt-6 mb-2">Log Aktivitas Nilai</h2>
-<table class="w-full border text-sm">
-<thead>
-<tr class="bg-gray-100">
-<th class="border px-2 py-2 text-left">Aksi</th>
-<th class="border px-2 py-2 text-left">Model</th>
-<th class="border px-2 py-2">ID</th>
-<th class="border px-2 py-2 text-left">Detail</th>
-<th class="border px-2 py-2">Waktu</th>
+<h2 class="font-headline text-headline-md text-on-surface mt-6 mb-2">Log Aktivitas Nilai</h2>
+<div class="bg-surface border border-outline-variant rounded-md overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+<thead class="bg-surface-dim border-b border-outline-variant">
+<tr>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Aksi</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Model</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">ID</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Detail</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-on-surface-muted uppercase">Waktu</span></th>
 </tr>
 </thead>
-<tbody>
+<tbody class="divide-y divide-outline-variant">
 @foreach($logs as $log)
-<tr>
-<td class="border px-2 py-1">{{ $log->action }}</td>
-<td class="border px-2 py-1">{{ class_basename($log->model_type) }}</td>
-<td class="border px-2 py-1">{{ $log->model_id }}</td>
-<td class="border px-2 py-1">{{ json_encode($log->metadata) }}</td>
-<td class="border px-2 py-1">{{ $log->created_at }}</td>
+<tr class="hover:bg-surface-dim transition-colors duration-state-change">
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $log->action }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ class_basename($log->model_type) }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $log->model_id }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ json_encode($log->metadata) }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $log->created_at }}</td>
 </tr>
 @endforeach
 </tbody>
-</table>
+</table></div></div>
 {{ $logs->links() }}
 
-<div class="mt-4 text-sm"><a href="/guru/assessments" class="text-blue-600 underline">Kembali ke Input Nilai</a></div>
-</body>
-</html>
+<div class="mt-4 font-body text-body-md"><a href="/guru/assessments" class="text-primary hover:underline">Kembali ke Input Nilai</a></div>
+</div>
+@endsection
