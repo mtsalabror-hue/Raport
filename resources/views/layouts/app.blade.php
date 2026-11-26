@@ -233,6 +233,14 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">description</span>
             <span class="font-body text-body-md">Rapor</span>
           </a>
+          <a href="{{ route('admin.ledger.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.ledger.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">table_chart</span>
+            <span class="font-body text-body-md">Leger</span>
+          </a>
+          <a href="{{ route('admin.extracurriculars.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.extracurriculars.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">star_half</span>
+            <span class="font-body text-body-md">Ekstrakurikuler</span>
+          </a>
           <a href="{{ route('admin.attitudes.recap') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.attitudes.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">self_improvement</span>
             <span class="font-body text-body-md">Rekap Sikap</span>
@@ -311,6 +319,14 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">diversity_3</span>
             <span class="font-body text-body-md">P5 Saya</span>
           </a>
+          <a href="{{ route('guru.supervised-extracurriculars.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('guru.supervised-extracurriculars.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">star_half</span>
+            <span class="font-body text-body-md">Ekstra Binaan</span>
+          </a>
+          <a href="{{ route('guru.profile.edit') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('guru.profile.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">account_circle</span>
+            <span class="font-body text-body-md">Profil Saya</span>
+          </a>
         @elseif($__roleSlug === 'wali_kelas')
           <a href="{{ route('wali.dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.dashboard') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->routeIs('wali.dashboard')) aria-current="page" @endif>
             <span class="material-symbols-outlined text-headline-md {{ request()->routeIs('wali.dashboard') ? 'text-accent' : '' }}" @if(request()->routeIs('wali.dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
@@ -359,6 +375,10 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
           <a href="{{ route('wali.competency-exams.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.competency-exams.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">verified</span>
             <span class="font-body text-body-md">UKK</span>
+          </a>
+          <a href="{{ route('wali.profile.edit') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('wali.profile.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
+            <span class="material-symbols-outlined text-headline-md" aria-hidden="true">account_circle</span>
+            <span class="font-body text-body-md">Profil Saya</span>
           </a>
         @elseif($__roleSlug === 'kepala_sekolah')
           <a href="{{ route('kepala.dashboard') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('kepala.dashboard') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" @if(request()->routeIs('kepala.dashboard')) aria-current="page" @endif>

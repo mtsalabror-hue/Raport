@@ -65,8 +65,11 @@
 @endif</td>
 <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">
 <a href="/wali/preview/{{ $card->student_id }}?academic_year_id={{ $card->academic_year_id }}&semester_id={{ $card->semester_id }}" class="inline-flex items-center px-2.5 py-1 rounded bg-sky-600 text-white font-body text-body-md hover:bg-sky-700">Preview</a>
+| <a href="/wali/report-cards/{{ $card->id }}/cover" class="inline-flex items-center px-2.5 py-1 rounded bg-violet-600 text-white font-body text-body-md hover:bg-violet-700">Sampul</a>
+| <a href="/wali/report-cards/{{ $card->id }}/identity" class="inline-flex items-center px-2.5 py-1 rounded bg-cyan-600 text-white font-body text-body-md hover:bg-cyan-700">Identitas</a>
 @if($card->isPublished())
 | <a href="/wali/report-cards/{{ $card->id }}/pdf" class="inline-flex items-center px-2.5 py-1 rounded bg-emerald-600 text-white font-body text-body-md hover:bg-emerald-700">Unduh PDF</a>
+| <a href="/wali/report-cards/{{ $card->id }}/transcript" class="inline-flex items-center px-2.5 py-1 rounded bg-amber-600 text-white font-body text-body-md hover:bg-amber-700">Transkrip</a>
 @endif
 </td>
 </tr>

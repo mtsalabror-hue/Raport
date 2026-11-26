@@ -211,7 +211,33 @@ Alur:
 - Pengaturan sistem tersimpan di `system_settings` (mis. `school_name`, KKTP default).
 - Semua data operasional berasal dari PostgreSQL (produksi).
 
-## 11. Keamanan (ringkas; detail di STAGE-12-PROGRESS.md)
+## 11. Fase F — Cetak tambahan, pembina ekstra, profil guru, dashboard admin (RDM)
+
+- **Cetak tambahan (DomPDF):** sampul (`sampul-{nis}-{semester}.pdf`), identitas
+  (`identitas-{nis}-{semester}.pdf`), transkrip (`transkrip-{nis}.pdf`) untuk wali
+  kelasnya; leger kelas (HTML + PDF landscape) untuk admin. Sampul/identitas
+  tersedia untuk semua status rapor; transkrip hanya untuk rapor yang sudah
+  diterbitkan/dikunci karena memakai snapshot `report_card_subjects`.
+- **Leger — pilihan sumber data (LedgerService):** satu aturan per kelas +
+  periode. Bila SEMUA siswa kelas itu sudah punya rapor diterbitkan/dikunci
+  pada periode tersebut, dipakai snapshot (`report_card_subjects`); bila
+  belum, dipakai nilai akhir live (`AssessmentService::finalScore`, sel yang
+  gagal dihitung tampil '-'). Label sumber ditampilkan di halaman dan PDF.
+- **Pembina ekstrakurikuler:** `extracurriculars.supervisor_id` (nullable, FK
+  teachers nullOnDelete). Admin menetapkan pembina di `/admin/extracurriculars`;
+  pembina menilai binaannya lewat `/guru/ekstra-binaan` pada tabel
+  `student_extracurriculars` yang sama dengan pengisian wali (last-writer-wins,
+  setiap penyimpanan dicatat di `activity_logs`).
+- **Profil guru:** `/guru/profil` dan `/wali/profil` — ubah nama, telepon,
+  alamat (tabel `teachers` + nama user terkait) dan ganti password (password
+  lama wajib benar). Foto sengaja tidak dibuat: kolom `photo` ada, tetapi
+  belum dipakai di halaman mana pun.
+- **Dashboard admin:** panel "Status Pengiriman Nilai" (agregasi per mapel
+  dari `MonitoringService::scoreStatus` Fase A — draft vs terkirim vs
+  dikunci pada periode aktif) dan "Aktivitas Guru Terakhir" (10 baris
+  terbaru `activity_logs`). Keduanya memakai data asli.
+
+## 12. Keamanan (ringkas; detail di STAGE-12-PROGRESS.md)
 
 - Login: session regenerate (anti fixation), logout invalidate + regenerasi token,
   rate limit 10 percobaan/menit (`throttle:10,1`).

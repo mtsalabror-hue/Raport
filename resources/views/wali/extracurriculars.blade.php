@@ -112,6 +112,7 @@
 <tr>
 <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Nama</span></th>
 <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Keterangan</span></th>
+<th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Pembina</span></th>
 <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Aksi</span></th>
 </tr>
 </thead>
@@ -120,6 +121,7 @@
 <tr class="hover:bg-surface-dim even:bg-blue-50/50 transition-colors duration-state-change">
 <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $m->name }}</td>
 <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $m->description ?? '-' }}</td>
+<td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $m->supervisor->name ?? '—' }}</td>
 <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface whitespace-nowrap">
 <form method="POST" action="/wali/extracurriculars/master/{{ $m->id }}" class="inline">
 @csrf

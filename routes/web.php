@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\AttitudeController as AdminAttitudeController;
 use App\Http\Controllers\Admin\BackupController as AdminBackupController;
 use App\Http\Controllers\Admin\CompetencyExamController as AdminCompetencyExamController;
 use App\Http\Controllers\Admin\CsvImportController as AdminCsvImportController;
+use App\Http\Controllers\Admin\ExtracurricularController as AdminExtracurricularController;
+use App\Http\Controllers\Admin\LedgerController as AdminLedgerController;
 use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Admin\CurriculumController;
 use App\Http\Controllers\Admin\HomeroomAssignmentController;
@@ -25,11 +27,14 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Teacher\AssessmentController;
 use App\Http\Controllers\Teacher\AttendanceController;
+use App\Http\Controllers\Teacher\ExtracurricularSupervisorController;
+use App\Http\Controllers\Teacher\ProfileController as TeacherProfileController;
 use App\Http\Controllers\Teacher\InternshipController as TeacherInternshipController;
 use App\Http\Controllers\Teacher\P5Controller as TeacherP5Controller;
 use App\Http\Controllers\Wali\HomeroomController;
 use App\Http\Controllers\Wali\InternshipController as WaliInternshipController;
 use App\Http\Controllers\Wali\ReportCardController as WaliReportCardController;
+use App\Http\Controllers\Wali\ReportPrintController as WaliReportPrintController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MonitoringController;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +72,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/report-cards/{reportCard}/publish', [AdminReportCardController::class, 'publish'])->name('admin.report-cards.publish');
         Route::post('/report-cards/{reportCard}/lock', [AdminReportCardController::class, 'lock'])->name('admin.report-cards.lock');
         Route::get('/report-cards/{reportCard}/pdf', [AdminReportCardController::class, 'pdf'])->name('admin.report-cards.pdf');
+        // Fase F: leger kelas (HTML + PDF).
+        Route::get('/ledger', [AdminLedgerController::class, 'index'])->name('admin.ledger.index');
+        Route::get('/ledger/pdf', [AdminLedgerController::class, 'pdf'])->name('admin.ledger.pdf');
+        // Fase F: penetapan pembina ekstrakurikuler.
+        Route::get('/extracurriculars', [AdminExtracurricularController::class, 'index'])->name('admin.extracurriculars.index');
+        Route::put('/extracurriculars/{extracurricular}/supervisor', [AdminExtracurricularController::class, 'updateSupervisor'])->name('admin.extracurriculars.supervisor.update');
         // Fase B: rekap sikap sosial & spiritual (hanya-baca).
         Route::get('/attitudes/recap', [AdminAttitudeController::class, 'recap'])->name('admin.attitudes.recap');
         // Fase C: CRUD proyek P5 (admin saja).
@@ -142,6 +153,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/p5', [TeacherP5Controller::class, 'index'])->name('guru.p5.index');
         Route::get('/p5/{project}', [TeacherP5Controller::class, 'show'])->name('guru.p5.show');
         Route::post('/p5/{project}/scores', [TeacherP5Controller::class, 'storeScores'])->name('guru.p5.scores.store');
+        // Fase F: ekstrakurikuler binaan (pembina menilai binaannya).
+        Route::get('/ekstra-binaan', [ExtracurricularSupervisorController::class, 'index'])->name('guru.supervised-extracurriculars.index');
+        Route::get('/ekstra-binaan/{extracurricular}', [ExtracurricularSupervisorController::class, 'show'])->name('guru.supervised-extracurriculars.show');
+        Route::post('/ekstra-binaan/{extracurricular}/students', [ExtracurricularSupervisorController::class, 'addStudent'])->name('guru.supervised-extracurriculars.students.store');
+        Route::post('/ekstra-binaan/{extracurricular}/scores', [ExtracurricularSupervisorController::class, 'storeScores'])->name('guru.supervised-extracurriculars.scores.store');
+        // Fase F: profil guru.
+        Route::get('/profil', [TeacherProfileController::class, 'edit'])->name('guru.profile.edit');
+        Route::put('/profil', [TeacherProfileController::class, 'update'])->name('guru.profile.update');
+        Route::put('/profil/password', [TeacherProfileController::class, 'updatePassword'])->name('guru.profile.password.update');
     });
     Route::middleware('role:wali_kelas')->prefix('wali')->group(function () {
         Route::get('/dashboard', [HomeroomController::class, 'dashboard'])->name('wali.dashboard');
@@ -176,6 +196,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/history/{student}', [HomeroomController::class, 'history'])->name('wali.history');
         Route::get('/report-cards', [WaliReportCardController::class, 'index'])->name('wali.report-cards.index');
         Route::get('/report-cards/{reportCard}/pdf', [WaliReportCardController::class, 'pdf'])->name('wali.report-cards.pdf');
+        // Fase F: cetak tambahan (sampul, identitas, transkrip).
+        Route::get('/report-cards/{reportCard}/cover', [WaliReportPrintController::class, 'cover'])->name('wali.report-cards.cover');
+        Route::get('/report-cards/{reportCard}/identity', [WaliReportPrintController::class, 'identity'])->name('wali.report-cards.identity');
+        Route::get('/report-cards/{reportCard}/transcript', [WaliReportPrintController::class, 'transcript'])->name('wali.report-cards.transcript');
+        // Fase F: profil wali kelas.
+        Route::get('/profil', [TeacherProfileController::class, 'edit'])->name('wali.profile.edit');
+        Route::put('/profil', [TeacherProfileController::class, 'update'])->name('wali.profile.update');
+        Route::put('/profil/password', [TeacherProfileController::class, 'updatePassword'])->name('wali.profile.password.update');
         // Stage 11: PKL/UKK siswa kelas wali (hanya-baca).
         Route::get('/internships/recap', [WaliInternshipController::class, 'recap'])->name('wali.internships.recap');
         Route::get('/internships', [WaliInternshipController::class, 'index'])->name('wali.internships.index');

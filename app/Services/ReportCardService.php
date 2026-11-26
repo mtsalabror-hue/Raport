@@ -9,6 +9,7 @@ use App\Models\PromotionDecision;
 use App\Models\ReportCard;
 use App\Models\ReportCardApproval;
 use App\Models\ReportCardSubject;
+use App\Models\Student;
 use App\Models\StudentAchievement;
 use App\Models\StudentAttitude;
 use App\Models\StudentExtracurricular;
@@ -245,6 +246,32 @@ class ReportCardService
             'homeroom_teacher_name' => $homeroom?->teacher?->name,
             'issued_by_name' => $card->issuer?->name,
         ]);
+    }
+
+    /**
+     * Data transkrip siswa (Fase F): nilai akhir lintas semester
+     * dari SNAPSHOT report_card_subjects. Hanya rapor yang sudah
+     * diterbitkan/dikunci yang punya snapshot, jadi hanya periode
+     * itu yang muncul — rapor draft/diajukan/divalidasi belum
+     * punya nilai final yang sah untuk transkrip.
+     */
+    public function transcriptData(Student $student): array
+    {
+        $cards = ReportCard::query()
+            ->with(['academicYear', 'semester', 'schoolClass', 'reportCardSubjects.subject'])
+            ->where('student_id', $student->id)
+            ->whereIn('status', self::PUBLISHED_STATUSES)
+            ->get()
+            ->sortBy([
+                fn ($a, $b) => strcmp($a->academicYear->name ?? '', $b->academicYear->name ?? ''),
+                fn ($a, $b) => strcmp($a->semester->name ?? '', $b->semester->name ?? ''),
+            ])
+            ->values();
+
+        return [
+            'student' => $student,
+            'cards' => $cards,
+        ];
     }
 
     // -----------------------------------------------------------------

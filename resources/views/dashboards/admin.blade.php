@@ -79,4 +79,58 @@
   <h2 class="font-headline text-headline-md text-indigo-900">Tahun Ajaran Aktif</h2>
   <p class="font-body text-body-md text-on-surface-muted">Saat ini sistem berjalan pada tahun ajaran <span class="font-label text-label-lg text-on-surface">{{ $activeYear?->name ?? '-' }}</span>.</p>
 </section>
+
+{{-- Fase F: status pengiriman nilai per mapel (MonitoringService Fase A, data asli periode aktif) --}}
+<section aria-label="Status Pengiriman Nilai" class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md">
+  <div class="flex flex-col gap-gutter-xs">
+    <h2 class="font-headline text-headline-md text-on-surface">Status Pengiriman Nilai</h2>
+    <p class="font-body text-body-md text-on-surface-muted">Periode aktif: {{ $activeYear?->name ?? '-' }} &middot; {{ $activeSemester?->name ?? '-' }}. Jumlah nilai per mapel berdasarkan status pengiriman guru.</p>
+  </div>
+  @if($scoreBySubject->isNotEmpty())
+  <div class="overflow-x-auto"><table class="w-full text-left border-collapse">
+    <thead class="bg-sidebar">
+      <tr>
+        <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Mata Pelajaran</span></th>
+        <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Draft</span></th>
+        <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Terkirim</span></th>
+        <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Dikunci</span></th>
+        <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Total</span></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-outline-variant">
+      @foreach($scoreBySubject as $row)
+      <tr class="hover:bg-surface-dim even:bg-blue-50/50 transition-colors duration-state-change">
+        <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $row['subject'] }}</td>
+        <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface tabular-nums">{{ $row['draft'] }}</td>
+        <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface tabular-nums">{{ $row['terkirim'] }}</td>
+        <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface tabular-nums">{{ $row['dikunci'] }}</td>
+        <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface tabular-nums font-semibold">{{ $row['total'] }}</td>
+      </tr>
+      @endforeach
+    </tbody>
+  </table></div>
+  @else
+  <p class="font-body text-body-md text-on-surface-muted">Belum ada penugasan atau nilai pada periode aktif.</p>
+  @endif
+</section>
+
+{{-- Fase F: aktivitas guru terakhir (activity_logs, data asli) --}}
+<section aria-label="Aktivitas Guru Terakhir" class="bg-surface border border-outline-variant rounded-md p-gutter-lg flex flex-col gap-gutter-md">
+  <div class="flex flex-col gap-gutter-xs">
+    <h2 class="font-headline text-headline-md text-on-surface">Aktivitas Guru Terakhir</h2>
+    <p class="font-body text-body-md text-on-surface-muted">Aktivitas terbaru yang tercatat di log sistem.</p>
+  </div>
+  @if($recentActivities->isNotEmpty())
+  <ul class="flex flex-col divide-y divide-outline-variant">
+    @foreach($recentActivities as $log)
+    <li class="py-gutter-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-xs">
+      <span class="font-body text-body-md text-on-surface"><strong>{{ $log->user->name ?? 'Sistem' }}</strong> &middot; {{ $log->action }}</span>
+      <span class="font-body text-body-sm text-on-surface-muted tabular-nums">{{ $log->created_at?->format('d-m-Y H:i') }}</span>
+    </li>
+    @endforeach
+  </ul>
+  @else
+  <p class="font-body text-body-md text-on-surface-muted">Belum ada aktivitas tercatat.</p>
+  @endif
+</section>
 @endsection

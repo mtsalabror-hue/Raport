@@ -618,7 +618,7 @@ class HomeroomController extends Controller
             'filters' => $filters,
             'students' => $students,
             'records' => $records,
-            'masters' => Extracurricular::orderBy('name')->get(),
+            'masters' => Extracurricular::with('supervisor')->orderBy('name')->get(),
         ]));
     }
 
