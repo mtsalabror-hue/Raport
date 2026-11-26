@@ -1,4 +1,4 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class Subject extends Model { protected $fillable=['code','name']; protected $table='subjects'; }
+class Subject extends Model { protected $fillable=['code','name','department_id']; protected $table='subjects'; }

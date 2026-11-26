@@ -1,1 +1,1 @@
-<!DOCTYPE html><html><body><h1>Tambah Mapel</h1><form method=POST action=/admin/subjects>@csrf<input name=code><input name=name><button>Simpan</button></form></body></html>
+<!DOCTYPE html><html><body><h1>Tambah Mapel</h1><form method=POST action=/admin/subjects>@csrf<input name=code><input name=name><select name=department_id><option value="">Tanpa Jurusan</option>@foreach($departments as $d)<option value="{{ $d->id }}">{{ $d->name }}</option>@endforeach</select><button>Simpan</button></form></body></html>

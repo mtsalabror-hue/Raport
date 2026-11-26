@@ -1,0 +1,1 @@
+<h1>Komponen</h1><form method=POST action=/guru/components><?php echo csrf_field(); ?><input name=name><input name=type><input name=weight><button>Simpan</button></form><?php /**PATH C:\Users\MyBook Hype AMD\OneDrive\Documents\SMK\RAPOR\resources\views/teacher/assessments/components.blade.php ENDPATH**/ ?>
