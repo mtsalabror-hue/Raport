@@ -113,7 +113,7 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Red+Hat+Text:wght@500;600;700&amp;family=Spline+Sans+Mono:wght@500&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
-<style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+<style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; } [x-cloak] { display: none !important; }</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-surface text-on-surface font-body antialiased">
@@ -138,6 +138,9 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
     $__schoolName = $__profileService->profile()['school_name'] ?? $__schoolName;
     $__logoUrl = $__profileService->logoUrl();
   } catch (\Throwable $__e) { $__schoolName = 'SMK IT AL-ABROR'; $__logoUrl = null; }
+  // Dropdown sidebar admin: terbuka otomatis bila salah satu anaknya aktif.
+  $__masterActive = request()->routeIs('admin.academic_years.*', 'admin.semesters.*', 'admin.departments.*', 'admin.classes.*', 'admin.subjects.*', 'admin.curricula.*', 'admin.teachers.*', 'admin.students.*');
+  $__penugasanActive = request()->routeIs('admin.teaching-assignments.*', 'admin.teaching-copy.*', 'admin.homeroom-assignments.*');
 @endphp
 
 <div class="min-h-screen flex bg-surface-dim">
@@ -175,7 +178,13 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md {{ request()->is('admin/dashboard') ? 'text-accent' : '' }}" @if(request()->is('admin/dashboard')) style="font-variation-settings: 'FILL' 1;" @endif aria-hidden="true">dashboard</span>
             <span class="font-label text-label-lg">Dashboard</span>
           </a>
-          <span class="px-gutter-md pt-gutter-md pb-gutter-xs font-label text-label-sm text-sky-300 uppercase">Data Master</span>
+          <div x-data="{ open: {{ $__masterActive ? 'true' : 'false' }} }">
+            <button type="button" @click="open = !open" class="w-full flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ $__masterActive ? 'text-on-sidebar bg-sidebar-hover' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" :aria-expanded="open.toString()">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">database</span>
+              <span class="font-label text-label-lg flex-1 text-left">Data Master</span>
+              <span class="material-symbols-outlined text-headline-md transition-transform duration-state-change" :class="open ? 'rotate-180' : ''" aria-hidden="true">expand_more</span>
+            </button>
+            <div x-show="open" x-cloak class="flex flex-col gap-gutter-xs pl-6 mt-1">
           <a href="{{ route('admin.academic_years.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.academic_years.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">calendar_month</span>
             <span class="font-body text-body-md">Tahun Ajaran</span>
@@ -208,7 +217,15 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">groups</span>
             <span class="font-body text-body-md">Siswa</span>
           </a>
-          <span class="px-gutter-md pt-gutter-md pb-gutter-xs font-label text-label-sm text-violet-300 uppercase">Penugasan</span>
+            </div>
+          </div>
+          <div x-data="{ open: {{ $__penugasanActive ? 'true' : 'false' }} }">
+            <button type="button" @click="open = !open" class="w-full flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ $__penugasanActive ? 'text-on-sidebar bg-sidebar-hover' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change" :aria-expanded="open.toString()">
+              <span class="material-symbols-outlined text-headline-md" aria-hidden="true">assignment_ind</span>
+              <span class="font-label text-label-lg flex-1 text-left">Penugasan</span>
+              <span class="material-symbols-outlined text-headline-md transition-transform duration-state-change" :class="open ? 'rotate-180' : ''" aria-hidden="true">expand_more</span>
+            </button>
+            <div x-show="open" x-cloak class="flex flex-col gap-gutter-xs pl-6 mt-1">
           <a href="{{ route('admin.teaching-assignments.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.teaching-assignments.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">assignment</span>
             <span class="font-body text-body-md">Mengajar</span>
@@ -221,6 +238,8 @@ if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">supervisor_account</span>
             <span class="font-body text-body-md">Wali Kelas</span>
           </a>
+            </div>
+          </div>
           <a href="{{ route('admin.users.index') }}" class="flex items-center gap-gutter-md px-gutter-md py-gutter-sm rounded {{ request()->routeIs('admin.users.*') ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow' : 'text-on-sidebar-muted hover:text-on-sidebar hover:bg-sidebar-hover' }} transition-colors duration-state-change">
             <span class="material-symbols-outlined text-headline-md" aria-hidden="true">manage_accounts</span>
             <span class="font-body text-body-md">Pengguna</span>

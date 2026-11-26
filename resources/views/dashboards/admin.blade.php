@@ -3,14 +3,10 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
-<section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-xl shadow-lg p-gutter-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
+<section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-xl shadow-lg p-gutter-lg">
   <div class="flex flex-col gap-gutter-xs">
     <h1 class="font-headline text-headline-lg text-white">Selamat datang, {{ auth()->user()->name }}!</h1>
     <p class="font-body text-body-md text-blue-100">Ringkasan data sekolah dan tahun ajaran aktif: {{ $activeYear?->name ?? '-' }}.</p>
-  </div>
-  <div class="flex flex-wrap gap-gutter-sm">
-    <a href="{{ route('admin.students.index') }}" class="inline-flex items-center px-gutter-md py-gutter-sm rounded bg-white text-blue-700 font-label text-label-lg hover:bg-blue-50">Data Siswa</a>
-    <a href="{{ route('admin.teachers.index') }}" class="inline-flex items-center px-gutter-md py-gutter-sm rounded bg-white text-blue-700 font-label text-label-lg hover:bg-blue-50">Data Guru</a>
   </div>
 </section>
 

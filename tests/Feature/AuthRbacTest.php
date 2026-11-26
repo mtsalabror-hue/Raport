@@ -33,6 +33,17 @@ class AuthRbacTest extends TestCase
         $this->get('/admin/dashboard')->assertStatus(200);
     }
 
+    public function test_admin_dashboard_banner_has_no_quick_action_buttons_and_sidebar_has_dropdowns(): void
+    {
+        $this->post('/login', ['email' => 'admin@smk.test', 'password' => 'password']);
+        $response = $this->get('/admin/dashboard')->assertStatus(200);
+        $response->assertDontSee('>Data Siswa<');
+        $response->assertDontSee('>Data Guru<');
+        $response->assertSee('Data Master');
+        $response->assertSee('Penugasan');
+        $response->assertSee('expand_more');
+    }
+
     public function test_guru_login_dashboard(): void
     {
         $this->post('/login', ['email' => 'guru@smk.test', 'password' => 'password'])->assertRedirect('/guru/dashboard');
