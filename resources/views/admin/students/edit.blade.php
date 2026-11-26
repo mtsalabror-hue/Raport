@@ -29,6 +29,18 @@
             <label for="gender" class="font-label text-label-md text-on-surface">Jenis Kelamin</label>
             <select id="gender" name="gender" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30"><option value="L" {{ $student->gender=='L'?'selected':'' }}>L</option><option value="P" {{ $student->gender=='P'?'selected':'' }}>P</option></select>
         </div>
+        <div class="flex flex-col gap-gutter-xs">
+            <label for="class_id" class="font-label text-label-md text-on-surface">Kelas</label>
+            <select id="class_id" name="class_id" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30"><option value="">Tanpa Kelas</option>@foreach($classes as $c)<option value="{{ $c->id }}" {{ $student->class_id==$c->id?'selected':'' }}>{{ $c->name }}</option>@endforeach</select>
+        </div>
+        <div class="flex flex-col gap-gutter-xs">
+            <label for="birth_date" class="font-label text-label-md text-on-surface">Tanggal Lahir</label>
+            <input id="birth_date" type="date" name="birth_date" value="{{ $student->birth_date ? date('Y-m-d', strtotime($student->birth_date)) : '' }}" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
+        </div>
+        <div class="flex flex-col gap-gutter-xs">
+            <label for="address" class="font-label text-label-md text-on-surface">Alamat</label>
+            <input id="address" name="address" value="{{ $student->address }}" placeholder="Alamat" class="w-full border border-outline-variant rounded px-3 py-2 font-body text-body-md focus:border-primary focus:ring-2 focus:ring-primary/30">
+        </div>
         <div>
             <button type="submit" class="inline-flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded bg-primary text-on-primary font-label text-label-lg hover:bg-primary-hover">Simpan</button>
         </div>

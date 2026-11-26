@@ -3,7 +3,7 @@
 @section('title', 'Dashboard Wali Kelas')
 
 @section('content')
-<section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-md p-gutter-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
+<section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-xl shadow-lg p-gutter-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
   <div class="flex flex-col gap-gutter-xs">
     <h1 class="font-headline text-headline-lg text-white">Selamat datang, {{ auth()->user()->name }}!</h1>
     <p class="font-body text-body-md text-blue-100">Wali kelas: {{ $teacher->name }} — hanya kelas pada penugasan wali Anda yang tampil.</p>
@@ -48,23 +48,23 @@
 
 @if($stats !== null)
 <section aria-label="Statistik Utama" class="grid grid-cols-2 md:grid-cols-5 gap-gutter-lg items-stretch mb-6">
-<div class="bg-blue-50 border border-blue-200 border-l-4 border-l-blue-500 rounded-md p-gutter-lg flex flex-col gap-gutter-xs">
+<div class="bg-blue-50 border border-blue-200 border-l-4 border-l-blue-500 rounded-xl p-gutter-lg flex flex-col gap-gutter-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
 <span class="font-label text-label-lg text-on-surface-muted">Total Siswa</span>
 <span class="font-display text-display-md text-blue-700 tabular-nums">{{ $stats['total_siswa'] }}</span>
 </div>
-<div class="bg-violet-50 border border-violet-200 border-l-4 border-l-violet-500 rounded-md p-gutter-lg flex flex-col gap-gutter-xs">
+<div class="bg-violet-50 border border-violet-200 border-l-4 border-l-violet-500 rounded-xl p-gutter-lg flex flex-col gap-gutter-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
 <span class="font-label text-label-lg text-on-surface-muted">Rapor Lengkap</span>
 <span class="font-display text-display-md text-violet-700 tabular-nums">{{ $stats['lengkap'] }}</span>
 </div>
-<div class="bg-emerald-50 border border-emerald-200 border-l-4 border-l-emerald-500 rounded-md p-gutter-lg flex flex-col gap-gutter-xs">
+<div class="bg-emerald-50 border border-emerald-200 border-l-4 border-l-emerald-500 rounded-xl p-gutter-lg flex flex-col gap-gutter-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
 <span class="font-label text-label-lg text-on-surface-muted">Belum Lengkap</span>
 <span class="font-display text-display-md text-emerald-700 tabular-nums">{{ $stats['belum_lengkap'] }}</span>
 </div>
-<div class="bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 rounded-md p-gutter-lg flex flex-col gap-gutter-xs">
+<div class="bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 rounded-xl p-gutter-lg flex flex-col gap-gutter-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
 <span class="font-label text-label-lg text-on-surface-muted">Sudah Diajukan</span>
 <span class="font-display text-display-md text-amber-700 tabular-nums">{{ $stats['diajukan'] }}</span>
 </div>
-<div class="bg-rose-50 border border-rose-200 border-l-4 border-l-rose-500 rounded-md p-gutter-lg flex flex-col gap-gutter-xs">
+<div class="bg-rose-50 border border-rose-200 border-l-4 border-l-rose-500 rounded-xl p-gutter-lg flex flex-col gap-gutter-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
 <span class="font-label text-label-lg text-on-surface-muted">Nilai Belum Terkirim</span>
 <span class="font-display text-display-md text-rose-700 tabular-nums">{{ $stats['nilai_belum_terkirim'] }}</span>
 </div>

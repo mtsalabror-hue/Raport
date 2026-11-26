@@ -20,6 +20,7 @@
                 <tr>
                     <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Nama</span></th>
                     <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Tahun Ajaran</span></th>
+                    <th class="px-gutter-md py-gutter-md"><span class="font-label text-label-md text-white uppercase">Aksi</span></th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-outline-variant">
@@ -27,6 +28,12 @@
                 <tr class="hover:bg-surface-dim even:bg-blue-50/50 transition-colors duration-state-change">
                     <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $s->name }}</td>
                     <td class="px-gutter-md py-gutter-md font-body text-body-md text-on-surface">{{ $s->academicYear?->name }}</td>
+                    <td class="px-gutter-md py-gutter-md">
+                        <div class="flex items-center gap-gutter-sm">
+                            <a href="{{ route('admin.semesters.edit',$s) }}" class="inline-flex items-center px-2.5 py-1 rounded bg-amber-100 text-amber-800 font-label text-label-md hover:bg-amber-200">Edit</a>
+                            <form method="POST" action="{{ route('admin.semesters.destroy',$s) }}" class="inline">@csrf @method('DELETE')<button type="submit" class="inline-flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded bg-error text-on-error font-label text-label-md">Hapus</button></form>
+                        </div>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

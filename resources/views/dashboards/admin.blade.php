@@ -3,7 +3,7 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
-<section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-md p-gutter-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
+<section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white rounded-xl shadow-lg p-gutter-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-gutter-md">
   <div class="flex flex-col gap-gutter-xs">
     <h1 class="font-headline text-headline-lg text-white">Selamat datang, {{ auth()->user()->name }}!</h1>
     <p class="font-body text-body-md text-blue-100">Ringkasan data sekolah dan tahun ajaran aktif: {{ $activeYear?->name ?? '-' }}.</p>
@@ -22,7 +22,7 @@
 </section>
 
 <section aria-label="Statistik Utama" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter-lg items-stretch">
-  <article class="h-full bg-blue-50 border border-blue-200 border-l-4 border-l-blue-500 rounded-md p-gutter-lg flex flex-col justify-between gap-gutter-md">
+  <article class="h-full bg-blue-50 border border-blue-200 border-l-4 border-l-blue-500 rounded-xl p-gutter-lg flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md gap-gutter-md">
     <header class="flex items-center justify-between gap-gutter-sm">
       <h2 class="font-label text-label-lg text-on-surface-muted">Total Siswa</h2>
       <span class="inline-flex items-center justify-center w-9 h-9 rounded bg-blue-600 text-white shrink-0">
@@ -35,7 +35,7 @@
     </div>
   </article>
 
-  <article class="h-full bg-violet-50 border border-violet-200 border-l-4 border-l-violet-500 rounded-md p-gutter-lg flex flex-col justify-between gap-gutter-md">
+  <article class="h-full bg-violet-50 border border-violet-200 border-l-4 border-l-violet-500 rounded-xl p-gutter-lg flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md gap-gutter-md">
     <header class="flex items-center justify-between gap-gutter-sm">
       <h2 class="font-label text-label-lg text-on-surface-muted">Total Guru</h2>
       <span class="inline-flex items-center justify-center w-9 h-9 rounded bg-violet-600 text-white shrink-0">
@@ -48,7 +48,7 @@
     </div>
   </article>
 
-  <article class="h-full bg-emerald-50 border border-emerald-200 border-l-4 border-l-emerald-500 rounded-md p-gutter-lg flex flex-col justify-between gap-gutter-md">
+  <article class="h-full bg-emerald-50 border border-emerald-200 border-l-4 border-l-emerald-500 rounded-xl p-gutter-lg flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md gap-gutter-md">
     <header class="flex items-center justify-between gap-gutter-sm">
       <h2 class="font-label text-label-lg text-on-surface-muted">Total Kelas</h2>
       <span class="inline-flex items-center justify-center w-9 h-9 rounded bg-emerald-600 text-white shrink-0">
@@ -61,7 +61,7 @@
     </div>
   </article>
 
-  <article class="h-full bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 rounded-md p-gutter-lg flex flex-col justify-between gap-gutter-md">
+  <article class="h-full bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 rounded-xl p-gutter-lg flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md gap-gutter-md">
     <header class="flex items-center justify-between gap-gutter-sm">
       <h2 class="font-label text-label-lg text-on-surface-muted">Mata Pelajaran</h2>
       <span class="inline-flex items-center justify-center w-9 h-9 rounded bg-amber-600 text-white shrink-0">
